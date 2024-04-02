@@ -1,6 +1,6 @@
 import { Teacher, Class, City, Gender,Course } from '@/types/teachers';
 
-const students: Teacher[] = [
+const teachers: Teacher[] = [
   {
     id: "1",
     name: "John Doe",
@@ -223,4 +223,4 @@ const students: Teacher[] = [
   },
 ];
 
-export default students;
+export default teachers;
