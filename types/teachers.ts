@@ -1,4 +1,4 @@
-export interface Student {
+export interface Teacher {
     id: string;
     name: string;
     course : Course;
