@@ -8,7 +8,6 @@ import Link from 'next/link';
 import Delete from '../common/buttons/delete';
 export function CustomColumns(): ColumnDef<Student> {
   return {
-	accessorKey : 'name',
     header: 'Actions',
     cell: ({ row }: { row: Row<Student> }) => {
       const handleDelete = () => {
