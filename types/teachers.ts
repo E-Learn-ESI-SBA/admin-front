@@ -8,6 +8,7 @@ export interface Teacher {
     points: number;
     city: City;
     phone_number: number;
+    password?: string;
   }
 
 
