@@ -1,4 +1,4 @@
-import { Table } from "@tanstack/react-table";
+import { Table} from "@tanstack/react-table";
 import { useMemo } from "react";
 import { capitalize } from "@/lib/utils";
 import {
@@ -17,10 +17,7 @@ export function Filter<T>({
   table: Table<T>;
   header: keyof T;
 }) {
-  const column = table.getColumn(header as string);
-  if (!column) {
-    return null; 
-  }
+  const column = table.getColumn(header as string)!;
 
   const firstValue = table
     .getPreFilteredRowModel()
