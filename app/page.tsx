@@ -1,5 +1,7 @@
+import { QuizTable } from "@/components/students/table";
+
 export default function Home() {
   return (
- <p>Dashboard</p>
+ <QuizTable/>
   );
 }
