@@ -2,13 +2,13 @@ import { IQuiz } from "@/types/quiz";
 import { DataTable } from "../common/table";
 import { quiz } from "@/static/dummy-data/quiz/quiz";
 import { CustomColumns } from "./collomns";
-import { Student } from "@/types/students";
-import students from "@/static/dummy-data/students";
-export function StudentsTable() {
+import { Teacher } from "@/types/teachers";
+import teachers from "@/static/dummy-data/teachers";
+export function TeachersTable() {
   return (
     <>
-      <DataTable<Student>
-        data={students}
+      <DataTable<Teacher>
+        data={teachers}
         headers={[
           {
             accessorKey: "id",
@@ -17,6 +17,10 @@ export function StudentsTable() {
           {
             accessorKey: "name",
             title: "Name",
+          },
+          {
+            accessorKey: "course",
+            title: "Course",
           },
           {
             accessorKey: "class",
@@ -45,7 +49,7 @@ export function StudentsTable() {
         ]}
         customColumns={[CustomColumns]}
         defaultFilter="name"
-        fuzzyElements={["class", "gender", "city"]}
+        fuzzyElements={["class", "gender", "course"]}
       />
     </>
   );

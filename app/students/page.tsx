@@ -1,5 +1,5 @@
-import { QuizTable } from "@/components/students/table";
+import { StudentsTable } from "@/components/students/table";
 
 export default function StudentDashboard() {
-  return <QuizTable />;
+  return <StudentsTable />;
 }
