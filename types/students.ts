@@ -12,17 +12,17 @@
 
 
   export enum Class {
-    first_year = "1CP",
-    second_year = "2CP",
-    third_year = "1CS",
-    fourth_year = "2CS",
-    fifth_year = "3CS",
+    first_year = "first_year",
+    second_year = "second_year",
+    third_year = "third_year",
+    fourth_year = "fourth_year",
+    fifth_year = "fifth_year",
   }
   export enum City {
-    ALGER = "Alger",
-    SIDI_BEL_Abbes = "Sidi Bel Abbes",
+    ALGER = "ALGER",
+    SIDI_BEL_Abbes = "SIDI_BEL_Abbes",
   }
   export enum Gender {
-    MALE = "Male",
-    FEMALE = "Female",
+    MALE = "MALE",
+    FEMALE = "FEMALE",
   }

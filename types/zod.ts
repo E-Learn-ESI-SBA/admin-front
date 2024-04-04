@@ -1,6 +1,6 @@
 import { z } from "zod";
-import {Student,Class,Gender } from "./students";
-import {Teacher,Course } from "./teachers";
+import {Class,Gender,City } from "./students";
+import {Course } from "./teachers";
 
 /* 
 Start Zod Schema for Student form
@@ -23,6 +23,25 @@ export const studentSchemaValidator = z.object({
 });
 
 export type TStudentSchema = z.infer<typeof studentSchemaValidator>;
+
+export const studentsSchemaValidator = z.object({
+  students : z.array(
+    z.object({
+      id: z.string().optional(),
+      name: z.string().min(2, { message: "must be at least 10 characters long" }),
+      class: z.nativeEnum(Class),
+      gender: z.nativeEnum(Gender),
+      email: z.string().min(12, { message: "must be at least 12 characters long" }),
+      phone_number: z.coerce
+        .number()
+        .min(10, { message: "must be at least 10 numbers" }),
+    } )
+  )
+
+});
+
+export type TStudentsSchema = z.infer<typeof studentsSchemaValidator>;
+
 
 
 /* 
