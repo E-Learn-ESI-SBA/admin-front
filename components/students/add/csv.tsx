@@ -17,7 +17,7 @@ const schema = z.array(
 
 );
 
-const Csv = () => {
+export const Csv = () => {
   const [csvData, setCsvData] = useState([]);
   const { handleSubmit } = useForm();
 
@@ -68,4 +68,4 @@ const Csv = () => {
   );
 };
 
-export default Csv;
+
