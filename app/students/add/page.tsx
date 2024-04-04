@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Csv } from "@/components/students/add/csv";
+import  Csv  from "@/components/students/add/csv";
 import { Manually } from "@/components/students/add/manually";
 const Profile = () => { 
   const [selected, setSelected] = useState(0);
