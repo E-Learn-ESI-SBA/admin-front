@@ -7,7 +7,7 @@ import Delete from '../common/buttons/delete';
 export function CustomColumns(): ColumnDef<TeacherWithUser> {
   return {
     header: 'Actions',
-    cell: ({ row }: { row: Row<Teacher> }) => {
+    cell: ({ row }: { row: Row<TeacherWithUser> }) => {
       const handleDelete = () => {
         console.log(`Delete teacher with ID: ${row.original.id}`);
       };

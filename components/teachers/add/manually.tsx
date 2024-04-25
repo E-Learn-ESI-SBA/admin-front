@@ -1,3 +1,4 @@
+'use client'
 import {
   Form,
   FormControl,
@@ -11,7 +12,7 @@ import { teacherSchemaValidator } from "@/types/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Teacher, Class, Gender, Course, TeacherWithUser } from "@/types/teachers";
+import { Teacher, Class, Gender, Course, TeacherWithUser, TeacherWithoutId } from "@/types/teachers";
 import { modulesData } from "@/static/dummy-data";
 import { classesData } from "@/static/dummy-data";
 import {
@@ -22,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import MultipleSelector from "@/components/ui/multi-select";
+import { addTeacher } from "@/app/actions/teachers";
 
 const defaultValues = {
   id: "",
@@ -35,8 +37,7 @@ const defaultValues = {
   phone_number: undefined,
   password: undefined,
 }
-export function Manually() {
-
+export  function Manually() {
 
 
   const form = useForm<TeacherWithUser>({
@@ -45,9 +46,11 @@ export function Manually() {
     mode: "onChange",
   });
 
-  const submitHandler = (data: Teacher) => {
-
-    console.log('data', data)
+  const submitHandler =  (data: TeacherWithUser) => {
+    const { courses, classes, ...user } = data;
+    const teacher: TeacherWithoutId = { courses, classes, user };
+    const response = addTeacher(teacher)
+    console.log(response)
   };
 
   return (
@@ -94,7 +97,7 @@ export function Manually() {
                 <MultipleSelector
                   aria-label="Select courses"
                   className="z-10"
-                  value={modulesData}
+                  value={field.value}
                   onChange={field.onChange}
                   placeholder="Select courses"
                   options={modulesData}
@@ -119,7 +122,7 @@ export function Manually() {
                 <MultipleSelector
                   aria-label="Select classes"
                   className="z-10"
-                  value={classesData}
+                  value={field.value}
                   onChange={field.onChange}
                   placeholder="Select classes"
                   options={classesData}

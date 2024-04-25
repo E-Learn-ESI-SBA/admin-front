@@ -1,12 +1,11 @@
 import { DataTable } from "../common/table";
 import { CustomColumns } from "./collomns";
 import { Teacher, TeacherWithUser } from "@/types/teachers";
-// import teachers from "@/static/dummy-data/teachers";
-import { getStudents } from "@/app/teachers/actions";
+import { getTeachers } from "@/app/actions/teachers";
 
 
 export async function TeachersTable() {
-  const teachers:Teacher[] = await getStudents(); 
+  const teachers:Teacher[] = await getTeachers(); 
   const teachersWithUser: TeacherWithUser[] = teachers.map((teacher) => ({
     ...teacher,  
     ...teacher.user, 
