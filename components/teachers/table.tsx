@@ -1,28 +1,33 @@
 import { DataTable } from "../common/table";
 import { CustomColumns } from "./collomns";
-import { Teacher } from "@/types/teachers";
-import teachers from "@/static/dummy-data/teachers";
-export function TeachersTable() {
+import { Teacher, TeacherWithUser } from "@/types/teachers";
+// import teachers from "@/static/dummy-data/teachers";
+import { getStudents } from "@/app/teachers/actions";
+
+
+export async function TeachersTable() {
+  const teachers:Teacher[] = await getStudents(); 
+  const teachersWithUser: TeacherWithUser[] = teachers.map((teacher) => ({
+    ...teacher,  
+    ...teacher.user, 
+  }));
+  
   return (
     <>
-      <DataTable<Teacher>
-        data={teachers}
+      <DataTable<TeacherWithUser>
+        data={teachersWithUser}
         headers={[
           {
             accessorKey: "id",
             title: "ID",
           },
           {
-            accessorKey: "name",
-            title: "Name",
+            accessorKey: "first_name",
+            title: "First Name",
           },
           {
-            accessorKey: "course",
-            title: "Course",
-          },
-          {
-            accessorKey: "class",
-            title: "Class",
+            accessorKey: "last_name",
+            title: "Last Name",
           },
           {
             accessorKey: "email",
@@ -31,10 +36,6 @@ export function TeachersTable() {
           {
             accessorKey: "gender",
             title: "Gender",
-          },
-          {
-            accessorKey: "points",
-            title: "Points",
           },
           {
             accessorKey: "city",
@@ -46,8 +47,8 @@ export function TeachersTable() {
           },
         ]}
         customColumns={[CustomColumns]}
-        defaultFilter="name"
-        fuzzyElements={["class", "gender", "course"]}
+        defaultFilter="first_name"
+        fuzzyElements={["gender"]}
       />
     </>
   );

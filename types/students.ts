@@ -23,6 +23,6 @@
     SIDI_BEL_Abbes = "SIDI_BEL_Abbes",
   }
   export enum Gender {
-    MALE = "MALE",
-    FEMALE = "FEMALE",
+    MALE = "Male",
+    FEMALE = "Female",
   }

@@ -1,11 +1,10 @@
 'use client';
 import { ColumnDef, Row } from '@tanstack/react-table';
 import { Button } from '../ui/button';
-import { Teacher } from '@/types/teachers';
-import { Student } from '@/types/students';
+import { Teacher, TeacherWithUser } from '@/types/teachers';
 import Link from 'next/link';
 import Delete from '../common/buttons/delete';
-export function CustomColumns(): ColumnDef<Teacher> {
+export function CustomColumns(): ColumnDef<TeacherWithUser> {
   return {
     header: 'Actions',
     cell: ({ row }: { row: Row<Teacher> }) => {

@@ -1,17 +1,14 @@
+import { User } from ".";
+
 export interface Teacher {
     id: string;
-    name: string;
-    course : Course;
-    class: Class;
-    email: string;
-    gender: Gender;
-    points: number;
-    city: City;
-    phone_number: number;
-    password?: string;
+    user: User;
+    courses?: Course;
+    classes?: Class;
+    points?: number;
   }
 
-
+export interface TeacherWithUser extends Teacher, User {}
   export enum Class {
     first_year = "1CP",
     second_year = "2CP",

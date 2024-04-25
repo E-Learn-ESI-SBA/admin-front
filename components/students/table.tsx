@@ -3,7 +3,7 @@ import { DataTable } from "../common/table";
 import { quiz } from "@/static/dummy-data/quiz/quiz";
 import { CustomColumns } from "./collomns";
 import { Student } from "@/types/students";
-import students from "@/static/dummy-data/students";
+import students from "@/static/dummy-data/students";  
 export function StudentsTable() {
   return (
     <>

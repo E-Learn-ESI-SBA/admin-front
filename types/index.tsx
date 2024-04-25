@@ -12,3 +12,15 @@ export interface SideBarItem {
     url: string;
     isActive?: boolean;
   }
+
+export interface User {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  birth_date?: string;
+  city?: string;
+  gender?: string;
+  phone_number?: string;
+  password?: string;
+}

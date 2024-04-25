@@ -37,14 +37,19 @@ Start Zod Schema for Teacher form
 
 export const teacherSchemaValidator = z.object({
   id: z.string().optional(),
-  name: z.string().min(2, { message: "must be at least 10 characters long" }),
-  class: z.nativeEnum(Class),
-  gender: z.nativeEnum(Gender),
-  course: z.nativeEnum(Course),
+  first_name: z.string().min(3, { message: "must be at least 3 characters long" }),
+  last_name: z.string().min(3, { message: "must be at least 3 characters long" }),
+  classes: z.array(z.object({
+    id: z.string(),
+    value: z.string(),
+  })),
+  gender: z.nativeEnum(Gender).optional(),
+  courses: z.array(z.object({
+    id: z.string(),
+    value: z.string(),
+  })),
   email: z.string().min(12, { message: "must be at least 12 characters long" }),
-  phone_number: z.coerce
-    .number()
-    .min(10, { message: "must be at least 10 numbers" }),
+  phone_number: z.string().optional(),
 //   password: z.string().regex(timeRegex, { message: "invalid time format. Use HH:MM format." }),
   password: z.string().min(2, { message: "must be at least 10 characters long" }),
 });
