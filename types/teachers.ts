@@ -1,16 +1,24 @@
+import { Option } from "@/components/ui/multi-select";
+import { User } from ".";
+
 export interface Teacher {
     id: string;
-    name: string;
-    course : Course;
-    class: Class;
-    email: string;
-    gender: Gender;
-    points: number;
-    city: City;
-    phone_number: number;
-    password?: string;
+    user: User;
+    courses?: Option[];
+    classes?: Option[];
+    points?: number;
   }
 
+export interface TeacherWithoutId {
+    user: User;
+    courses?: Option[];
+    classes?: Option[];
+    points?: number;
+  }
+
+export interface TeacherWithUser extends Teacher, User {}
+
+export interface TeacherWithUserWithoutId extends TeacherWithoutId, User {}
 
   export enum Class {
     first_year = "1CP",

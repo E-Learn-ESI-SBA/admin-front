@@ -2,14 +2,14 @@
 import { ColumnDef, Row } from '@tanstack/react-table';
 import { Button } from '../ui/button';
 import { IQuiz } from '@/types/quiz';
-import { Student } from '@/types/students';
+import { Student, StudentWithUser } from '@/types/students';
 import { Ping } from '../icons/ping';
 import Link from 'next/link';
 import Delete from '../common/buttons/delete';
-export function CustomColumns(): ColumnDef<Student> {
+export function CustomColumns(): ColumnDef<StudentWithUser> {
   return {
     header: 'Actions',
-    cell: ({ row }: { row: Row<Student> }) => {
+    cell: ({ row }: { row: Row<StudentWithUser> }) => {
       const handleDelete = () => {
         console.log(`Delete quiz with ID: ${row.original.id}`);
       };
