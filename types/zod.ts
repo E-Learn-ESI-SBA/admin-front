@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {Class,Gender,City } from "./students";
-import {Course } from "./teachers";
+
 
 /* 
 Start Zod Schema for Student form
@@ -11,8 +11,10 @@ const timeRegex = /^(?:2[0-3]|[01][0-9]):[0-5][0-9]$/;
 
 export const studentSchemaValidator = z.object({
   id: z.string().optional(),
-  name: z.string().min(2, { message: "must be at least 10 characters long" }),
-  class: z.nativeEnum(Class),
+  first_name: z.string().min(2, { message: "must be at least 10 characters long" }),
+  last_name: z.string().min(2, { message: "must be at least 10 characters long" }),
+  promo: z.nativeEnum(Class),
+  group: z.string(),
   gender: z.nativeEnum(Gender),
   email: z.string().min(12, { message: "must be at least 12 characters long" }),
   phone_number: z.coerce
