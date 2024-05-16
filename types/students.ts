@@ -2,7 +2,6 @@ import { Option } from "@/components/ui/multi-select";
 import { User } from ".";
 
 export interface Student {
-  id: string;
   user: User;
   promo: string;
   group: string;
