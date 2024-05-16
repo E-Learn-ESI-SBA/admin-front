@@ -17,21 +17,11 @@ export function StudentsTable({ students }: { students: StudentWithUser[] }) {
   const deleteHandler = async (student: StudentWithUser) => {
     try {
       const response = await deleteStudent(student.id);
-      toast.success("Student deleted successfully", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
       setLocalStudents(prevStudents => prevStudents.filter(s => s.id != student.id))
-    } catch (err) {
-      console.log(err)
-      toast.error("Error when deleting student", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+    } catch (err: any) {
+      console.log(err.message)
+      throw new Error(err.message)
+
     }
   }
 

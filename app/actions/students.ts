@@ -6,7 +6,7 @@ import { base_url } from '@/config/constants';
 async function handleResponse(response: Response) {
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Something went wrong');
+        throw new Error(errorData.message || errorData.detail || 'Something went wrong');
     }
     const text = await response.text();
     return text ? JSON.parse(text) : {};
@@ -53,9 +53,10 @@ export async function deleteStudent(id: string) {
                 'Content-Type': 'application/json',
             },
         });
-        return handleResponse(response);
-    } catch (err) {
-        throw new Error(`Failed to delete student with id= ${id}`);
+        const srvRes = await handleResponse(response);
+        return srvRes
+    } catch (err: any) {
+        throw new Error(err.message);
     }
 }
 
