@@ -20,6 +20,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { addStudent } from "@/app/actions/students";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const defaultValues = {
   id: "",
@@ -31,7 +33,7 @@ const defaultValues = {
   password: undefined,
 }
 export function Manually() {
-
+  const router = useRouter()
 
 
   const form = useForm<StudentWithUser>({
@@ -40,9 +42,28 @@ export function Manually() {
     mode: "onChange",
   });
 
-  const submitHandler =  (data: StudentWithUser) => {
+  const submitHandler = async (data: StudentWithUser) => {
     const { group, promo, registration_number, ...user } = data;
     const student: StudentWithoutId = { group, promo, registration_number, user };
+    try{
+      await addStudent(student)
+      toast.success("Student added successfully", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
+      setTimeout(() => {
+        router.push('/s')
+      }, 3000)
+    }catch{
+      toast.error("Student deleted successfully", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
+    }
     const response = addStudent(student)
     console.log(response)
   };

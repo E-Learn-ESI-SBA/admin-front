@@ -1,43 +1,76 @@
 'use server'
 import { Student, StudentWithoutId } from "@/types/students";
-import axiosClient from "@/utils/axiosInstance";
+import { base_url } from '@/config/constants'; 
 
-export async function getStudent(): Promise<Student[]> {
+
+async function handleResponse(response: Response) {
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Something went wrong');
+    }
+    const text = await response.text();
+    return text ? JSON.parse(text) : {};
+}
+
+
+export async function getStudents(): Promise<Student[]> {
     'use server'
     try {
-        const response = await axiosClient.get('students')
-        return response.data;
+        const response = await fetch(`${base_url}/students`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return await handleResponse(response);
     } catch (err) {
-        throw new Error("Failed in fetching students")
+        throw new Error("Failed in fetching students");
     }
 }
 
 export async function addStudent(data: StudentWithoutId) {
     'use server'
     try {
-        const response = await axiosClient.post('students/', data)
-        return response.data;
+        const response = await fetch(`${base_url}/students`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        return await handleResponse(response);
     } catch (err) {
-        throw new Error('Failed to create new student')
+        throw new Error('Failed to create new student');
     }
 }
 
 export async function deleteStudent(id: string) {
     'use server'
     try {
-        const response = await axiosClient.delete(`students/${id}`)
-        return response.data;
+        const response = await fetch(`${base_url}/students/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return handleResponse(response);
     } catch (err) {
-        throw new Error(`Failed to delete student with id= ${id}`)
+        throw new Error(`Failed to delete student with id= ${id}`);
     }
 }
 
 export async function updateStudent(id: string, data: Student) {
     'use server'
     try {
-        const response = await axiosClient.put(`students/${id}`, data)
-        return response.data;
+        const response = await fetch(`${base_url}/students/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        return await handleResponse(response);
     } catch (err) {
-        throw new Error(`Failed to update student with id= ${id}`)
+        throw new Error(`Failed to update student with id= ${id}`);
     }
 }
