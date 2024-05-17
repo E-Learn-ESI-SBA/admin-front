@@ -10,41 +10,34 @@ import { deleteStudent, getStudents } from "@/app/actions/students";
 import { TeacherWithUser } from "@/types/teachers";
 import { toast } from "sonner"
 
-export function StudentsTable({ students }: { students: StudentWithUser[] }) {
-
+export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
+    const students: StudentWithUser[] = rawStudents.map((student: Student) => {
+      const {user, promo, group, registration_number} = student;
+      return { ...user, promo, group, registration_number}
+    })
   const [localStudents, setLocalStudents] = useState<StudentWithUser[]>(students);
 
   const deleteHandler = async (student: StudentWithUser) => {
     try {
       const response = await deleteStudent(student.id);
-      toast.success("Student deleted successfully", {
-        style: {
-          backgroundColor: "green",
-          color: "white",
-        },
-      });
       setLocalStudents(prevStudents => prevStudents.filter(s => s.id != student.id))
-    } catch (err) {
-      console.log(err)
-      toast.error("Error when deleting student", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+    } catch (err: any) {
+      console.log(err.message)
+      throw new Error(err.message)
+
     }
   }
 
-
-  const studentsWithUser: StudentWithUser[] = localStudents.map((student) => ({
-    ...student,
-    ...student.user,
-  }));
+  // const studentsWithUser: Student[] = localStudents.map((student) => ({
+  //   ...student,
+  //   ...student.user,
+  // }));
 
   return (
     <>
       <DataTable<StudentWithUser>
-        data={studentsWithUser}
+        data={localStudents}
+        url="/s"
         deleteHandler={(student) => deleteHandler(student)}
         headers={[
           {
@@ -57,7 +50,11 @@ export function StudentsTable({ students }: { students: StudentWithUser[] }) {
           },
           {
             accessorKey: "promo",
-            title: "Class",
+            title: "Promo",
+          },
+          {
+            accessorKey: "year",
+            title: "Year",
           },
           {
             accessorKey: "group",

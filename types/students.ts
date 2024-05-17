@@ -2,23 +2,32 @@ import { Option } from "@/components/ui/multi-select";
 import { User } from ".";
 
 export interface Student {
-  user: User;
-  promo: string;
-  group: string;
-  registration_number: string;
+  user: User | Partial<User>;
+  promo?: string;
+  group?: string;
+  year?: string;
+  registration_number?: string;
 }
 
 
-export interface StudentWithoutId {
-  user: User
-  promo: string;
-  group: string;
-  registration_number: string;
+
+// export interface StudentWithoutId {
+//   user: User
+//   promo: string;
+//   group: string;
+//   registration_number: string;
+// }
+
+// export interface StudentWithUser extends Student, User {}
+
+export interface StudentWithUser extends User {
+  promo?: string;
+  group?: string;
+  year?: string;
+  registration_number?: string;
 }
 
-export interface StudentWithUser extends Student, User {}
-
-export interface TeacherWithUserWithoutId extends StudentWithoutId, User {}
+// export interface TeacherWithUserWithoutId extends StudentWithoutId, User {}
 
 
 

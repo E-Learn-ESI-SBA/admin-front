@@ -279,11 +279,22 @@ export function DataTable<T extends { id: string }>({
       await deleteHandler(row);
       setDeleteLoading(false);
       setWantDelete(false);
-      toast.success("Item deleted successfully.");
+      toast.success("Item deleted successfully.", {
+        style: {
+              backgroundColor: "green",
+              color: "white",
+            },
+      });
     } catch (e) {
+      console.log(e)
       setDeleteLoading(false);
       setWantDelete(false);
-      toast.error("An error occurred while deleting the item.");
+      toast.error("An error occurred while deleting the item.", {
+        style: {
+              backgroundColor: "red",
+              color: "white",
+            },
+      });
     }
     }
     return
