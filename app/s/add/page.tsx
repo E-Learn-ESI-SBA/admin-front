@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Csv } from "@/components/students/add/csv";
-import { Manually } from "@/components/students/add/manually";
+import { AddOrUpdateStudent } from "@/components/students/addOrUpdateStudent";
 import MultipleSelector from "@/components/ui/multi-select";
 const Profile = () => {
   const [selected, setSelected] = useState(0);
@@ -25,7 +25,7 @@ const Profile = () => {
           </a>
         </div>
 
-        {selected ? <Csv /> : <Manually />}
+        {selected ? <Csv /> : <AddOrUpdateStudent addOrUpdate="ADD" />}
       </div>
     </div>
   );

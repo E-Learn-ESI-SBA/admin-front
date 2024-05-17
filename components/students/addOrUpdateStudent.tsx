@@ -1,3 +1,4 @@
+'use client'
 import {
   Form,
   FormControl,
@@ -7,11 +8,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { studentSchemaValidator } from "@/types/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Student, Class, Gender, StudentWithUser, StudentWithoutId } from "@/types/students";
+import { Student, Class, Gender, StudentWithUser } from "@/types/students";
 import {
   Select,
   SelectContent,
@@ -19,33 +19,127 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { addStudent } from "@/app/actions/students";
+import { addStudent, updateStudent } from "@/app/actions/students";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { User } from "@/types";
 
-const defaultValues = {
-  id: "",
-  name: "",
-  class: undefined,
-  gender: undefined,
-  email: undefined,
-  phone_number: undefined,
-  password: undefined,
+type Props = {
+  initDefaultValues?: StudentWithUser
+  addOrUpdate: "ADD" | "UPDATE"
 }
-export function Manually() {
+
+
+
+const compareAndUpdateData = (updatedData: StudentWithUser, initialData: StudentWithUser): Partial<Student> => {
+  const modifiedData: Partial<StudentWithUser> = {};
+
+  for (const key in updatedData) {
+    if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
+      if (updatedData[key as keyof StudentWithUser] !== initialData[key as keyof StudentWithUser]) {
+        modifiedData[key as keyof StudentWithUser] = updatedData[key as keyof StudentWithUser];
+      }
+    }
+  }
+
+  if (Object.keys(modifiedData).length === 0 && modifiedData.constructor === Object) {
+    return {};
+  }
+  console.log(modifiedData)
+  const { group, promo, registration_number, year, password, ...user } = modifiedData;
+  const student: Partial<Student> = {
+    group,
+    promo,
+    registration_number,
+    year,
+    user: {
+      ...(user as Partial<User>)
+    }
+  };
+  
+  if (student && student.user && Object.keys(student.user).length === 0 && student.constructor === Object) {
+    return {};
+  }
+
+  return student;
+};
+
+
+
+export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
   const router = useRouter()
+  const defaultValues = initDefaultValues ? initDefaultValues : {
+    id: "",
+    first_name: "",
+    last_name: "",
+    year: undefined,
+    promo: undefined,
+    city: undefined,
+    gender: undefined,
+    email: "undefined",
+    phone_number: undefined,
+    password: undefined,
+  }
 
-
+  const studentSchemaValidator = z.object({
+    id: z.string(),
+    first_name: z.string().min(2, { message: "must be at least 10 characters long" }),
+    last_name: z.string().min(2, { message: "must be at least 10 characters long" }),
+    promo: z.string().optional(),
+    group: z.string().optional(),
+    gender: z.nativeEnum(Gender).optional(),
+    email: z.string().min(12, { message: "must be at least 12 characters long" }),
+    phone_number: z.coerce
+      .number()
+      .min(10, { message: "must be at least 10 numbers" }).optional(),
+    password: addOrUpdate == "UPDATE"
+      ? z.string().min(10, { message: "password must be at least 10 characters long" }).optional().nullable()
+      : z.string().min(10, { message: "password must be at least 10 characters long" })
+  });
+  
+  type TStudentSchema = z.infer<typeof studentSchemaValidator>;
+  
   const form = useForm<StudentWithUser>({
     resolver: zodResolver(studentSchemaValidator),
     defaultValues,
     mode: "onChange",
   });
 
-  const submitHandler = async (data: StudentWithUser) => {
+  const updateHandler = async (data: StudentWithUser) => {
+    const student = compareAndUpdateData(data, defaultValues);
+    if(Object.keys(student).length == 0){
+      toast.success("Nothing changed");
+      return
+    }
+    try {
+      await updateStudent(data.id, student);
+      toast.success("Student updated successfully", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
+  
+      setTimeout(() => {
+        router.push('/s');
+      }, 3000);
+    } catch (error) {
+      toast.error("Error when updating Student", {
+        style: {
+          backgroundColor: "red",
+          color: "white",
+        },
+      });
+    }
+  };
+  
+
+
+  const addHandler = async (data: StudentWithUser) => {
     const { group, promo, registration_number, ...user } = data;
-    const student: StudentWithoutId = { group, promo, registration_number, user };
-    try{
+    const student: Student = { group, promo, registration_number, user };
+    try {
       await addStudent(student)
       toast.success("Student added successfully", {
         style: {
@@ -56,22 +150,26 @@ export function Manually() {
       setTimeout(() => {
         router.push('/s')
       }, 3000)
-    }catch{
-      toast.error("Student deleted successfully", {
+    } catch {
+      toast.error("Error when adding student", {
         style: {
-          backgroundColor: "green",
+          backgroundColor: "red",
           color: "white",
         },
       });
     }
-    const response = addStudent(student)
-    console.log(response)
   };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(submitHandler)}
+        onSubmit={form.handleSubmit((data) => {
+          if (addOrUpdate == "ADD") {
+            addHandler(data)
+          } else {
+            updateHandler(data)
+          }
+        })}
         className="space-y-8 flex flex-col gap-4  w-full p-4"
       >
         <div className="flex gap-4">
@@ -232,7 +330,7 @@ export function Manually() {
 
 
         <Button type="submit">
-          Add Student
+          {addOrUpdate == "ADD" ? "Add Student" : "Update Student"}
         </Button>
 
       </form>

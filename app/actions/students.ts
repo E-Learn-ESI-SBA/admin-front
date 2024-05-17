@@ -1,5 +1,5 @@
 'use server'
-import { Student, StudentWithoutId } from "@/types/students";
+import { Student } from "@/types/students";
 import { base_url } from '@/config/constants'; 
 
 
@@ -28,10 +28,25 @@ export async function getStudents(): Promise<Student[]> {
     }
 }
 
-export async function addStudent(data: StudentWithoutId) {
+export async function getStudentById(id: string): Promise<Student> {
     'use server'
     try {
-        const response = await fetch(`${base_url}/students`, {
+        const response = await fetch(`${base_url}/students/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return await handleResponse(response);
+    } catch (err) {
+        throw new Error("Failed in fetching student with id");
+    }
+}
+
+export async function addStudent(data: Student) {
+    'use server'
+    try {
+        const response = await fetch(`${base_url}/students/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,7 +62,7 @@ export async function addStudent(data: StudentWithoutId) {
 export async function deleteStudent(id: string) {
     'use server'
     try {
-        const response = await fetch(`${base_url}/students/${id}`, {
+        const response = await fetch(`${base_url}/students/${id}/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,18 +75,20 @@ export async function deleteStudent(id: string) {
     }
 }
 
-export async function updateStudent(id: string, data: Student) {
+export async function updateStudent(id: string, data: Partial<Student>) {
     'use server'
     try {
-        const response = await fetch(`${base_url}/students/${id}`, {
-            method: 'PUT',
+        const response = await fetch(`${base_url}/students/${id}/`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         });
+        
         return await handleResponse(response);
-    } catch (err) {
-        throw new Error(`Failed to update student with id= ${id}`);
+    } catch (err: any) {
+        console.log(err.message)
+        throw new Error(err.message);
     }
 }

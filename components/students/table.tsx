@@ -10,8 +10,11 @@ import { deleteStudent, getStudents } from "@/app/actions/students";
 import { TeacherWithUser } from "@/types/teachers";
 import { toast } from "sonner"
 
-export function StudentsTable({ students }: { students: StudentWithUser[] }) {
-
+export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
+    const students: StudentWithUser[] = rawStudents.map((student: Student) => {
+      const {user, promo, group, registration_number} = student;
+      return { ...user, promo, group, registration_number}
+    })
   const [localStudents, setLocalStudents] = useState<StudentWithUser[]>(students);
 
   const deleteHandler = async (student: StudentWithUser) => {
@@ -25,16 +28,16 @@ export function StudentsTable({ students }: { students: StudentWithUser[] }) {
     }
   }
 
-
-  const studentsWithUser: StudentWithUser[] = localStudents.map((student) => ({
-    ...student,
-    ...student.user,
-  }));
+  // const studentsWithUser: Student[] = localStudents.map((student) => ({
+  //   ...student,
+  //   ...student.user,
+  // }));
 
   return (
     <>
       <DataTable<StudentWithUser>
-        data={studentsWithUser}
+        data={localStudents}
+        url="/s"
         deleteHandler={(student) => deleteHandler(student)}
         headers={[
           {
@@ -47,7 +50,11 @@ export function StudentsTable({ students }: { students: StudentWithUser[] }) {
           },
           {
             accessorKey: "promo",
-            title: "Class",
+            title: "Promo",
+          },
+          {
+            accessorKey: "year",
+            title: "Year",
           },
           {
             accessorKey: "group",
