@@ -28,6 +28,9 @@ import { User } from "@/types";
 type Props = {
   initDefaultValues?: StudentWithUser
   addOrUpdate: "ADD" | "UPDATE"
+  groups?: string[]
+  promos?: string[]
+  years?: string[]
 }
 
 
@@ -67,8 +70,9 @@ const compareAndUpdateData = (updatedData: StudentWithUser, initialData: Student
 
 
 
-export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
+export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, years, promos }: Props) {
   const router = useRouter()
+  console.log(groups, years, promos)
   const defaultValues = initDefaultValues ? initDefaultValues : {
     id: "",
     first_name: "",
@@ -77,7 +81,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
     promo: undefined,
     city: undefined,
     gender: undefined,
-    email: "undefined",
+    email: "",
     phone_number: undefined,
     password: undefined,
   }
@@ -121,9 +125,9 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
         },
       });
   
-      setTimeout(() => {
-        router.push('/s');
-      }, 3000);
+      // setTimeout(() => {
+      //   router.push('/s');
+      // }, 3000);
     } catch (error) {
       toast.error("Error when updating Student", {
         style: {
@@ -140,7 +144,8 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
     const { group, promo, registration_number, ...user } = data;
     const student: Student = { group, promo, registration_number, user };
     try {
-      await addStudent(student)
+      const response = await addStudent(student)
+      console.log(response)
       toast.success("Student added successfully", {
         style: {
           backgroundColor: "green",
@@ -148,7 +153,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
         },
       });
       setTimeout(() => {
-        router.push('/s')
+        router.push(`/s/${response.user.id}`)
       }, 3000)
     } catch {
       toast.error("Error when adding student", {
@@ -216,11 +221,9 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={Class.first_year}>1CP</SelectItem>
-                    <SelectItem value={Class.second_year}>2CP</SelectItem>
-                    <SelectItem value={Class.third_year}>1CS</SelectItem>
-                    <SelectItem value={Class.fourth_year}>2CS</SelectItem>
-                    <SelectItem value={Class.fifth_year}>3CS</SelectItem>
+                    {years?.map((year) => (
+                      <SelectItem value={year}>{year}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -242,13 +245,9 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={Class.first_year}>1</SelectItem>
-                    <SelectItem value={Class.second_year}>2</SelectItem>
-                    <SelectItem value={Class.third_year}>1</SelectItem>
-                    <SelectItem value={Class.fourth_year}>2</SelectItem>
-                    <SelectItem value={Class.fifth_year}>3</SelectItem>
-                    <SelectItem value={Class.fifth_year}>4</SelectItem>
-                    <SelectItem value={Class.fifth_year}>5</SelectItem>
+                  {groups?.map((group) => (
+                      <SelectItem value={group}>{group}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
