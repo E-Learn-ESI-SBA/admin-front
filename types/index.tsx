@@ -24,3 +24,12 @@ export interface User {
   phone_number?: string;
   password?: string;
 }
+export interface IPayload {
+    id: string;
+    email:string
+    username:string
+    year:string
+    group:string
+    role:string
+    
+}
