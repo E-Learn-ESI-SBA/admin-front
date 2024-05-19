@@ -7,6 +7,7 @@ export interface Student {
   group?: string;
   year?: string;
   registration_number?: string;
+  promo_group?: string;
 }
 
 
@@ -25,6 +26,7 @@ export interface StudentWithUser extends User {
   group?: string;
   year?: string;
   registration_number?: string;
+  promo_group?: string;
 }
 
 // export interface TeacherWithUserWithoutId extends StudentWithoutId, User {}

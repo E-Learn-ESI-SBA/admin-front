@@ -24,46 +24,39 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { User } from "@/types";
+import { Option } from "../ui/multi-select";
+import { useState } from "react";
 
 type Props = {
   initDefaultValues?: StudentWithUser
   addOrUpdate: "ADD" | "UPDATE"
-  groups?: string[]
+  groups?: Option[]
   promos?: string[]
   years?: string[]
 }
-
 
 
 const compareAndUpdateData = (updatedData: StudentWithUser, initialData: StudentWithUser): Partial<Student> => {
   const modifiedData: Partial<StudentWithUser> = {};
 
   for (const key in updatedData) {
-    if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
-      if (updatedData[key as keyof StudentWithUser] !== initialData[key as keyof StudentWithUser]) {
-        modifiedData[key as keyof StudentWithUser] = updatedData[key as keyof StudentWithUser];
-      }
+    if (updatedData[key as keyof StudentWithUser] !== initialData[key as keyof StudentWithUser]) {
+      modifiedData[key as keyof StudentWithUser] = updatedData[key as keyof StudentWithUser];
     }
   }
 
-  if (Object.keys(modifiedData).length === 0 && modifiedData.constructor === Object) {
+  if (Object.keys(modifiedData).length === 0) {
     return {};
   }
-  console.log(modifiedData)
-  const { group, promo, registration_number, year, password, ...user } = modifiedData;
+
+  const { group, promo, registration_number, year, ...user } = modifiedData;
   const student: Partial<Student> = {
     group,
     promo,
     registration_number,
     year,
-    user: {
-      ...(user as Partial<User>)
-    }
+    user: Object.keys(user).length > 0 ? user as Partial<User> : undefined
   };
-
-  if (student && student.user && Object.keys(student.user).length === 0 && student.constructor === Object) {
-    return {};
-  }
 
   return student;
 };
@@ -71,6 +64,8 @@ const compareAndUpdateData = (updatedData: StudentWithUser, initialData: Student
 
 
 export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, years, promos }: Props) {
+  const [initValues, setInitValues] = useState<StudentWithUser | undefined>(initDefaultValues)
+
   const router = useRouter()
   const defaultValues = initDefaultValues ? initDefaultValues : {
     id: "",
@@ -78,11 +73,13 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
     last_name: "",
     year: undefined,
     promo: undefined,
+    group_promo: undefined,
     city: undefined,
     gender: undefined,
     email: "",
     phone_number: undefined,
     password: undefined,
+    valid_group: undefined
   }
 
   const studentSchemaValidator = z.object({
@@ -91,6 +88,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
     last_name: z.string().min(2, { message: "must be at least 10 characters long" }),
     promo: z.string().optional(),
     group: z.string().optional(),
+    year: z.string().optional(),
     gender: z.nativeEnum(Gender).optional(),
     email: z.string().min(12, { message: "must be at least 12 characters long" }),
     phone_number: z.string().optional(),
@@ -109,6 +107,8 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
 
   const updateHandler = async (data: StudentWithUser) => {
     const student = compareAndUpdateData(data, defaultValues);
+    setInitValues(data)
+
     if (Object.keys(student).length == 0) {
       toast.success("Nothing changed");
       return
@@ -210,7 +210,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
                 <FormLabel>Class Year:</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={defaultValues.year}>
+                  defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select Class" />
@@ -234,7 +234,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
                 <FormLabel>Promo:</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={defaultValues.promo}>
+                  defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select Promo" />
@@ -257,16 +257,19 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
               <FormItem className="w-full">
                 <FormLabel>Group:</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}>
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value} 
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Groupe" />
+                      <SelectValue placeholder="Select Group" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     {groups?.map((group) => (
-                      <SelectItem value={group}>{group}</SelectItem>
+                      <SelectItem key={group.value} value={group.value}>
+                        {group.label}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -274,6 +277,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
               </FormItem>
             )}
           />
+
 
         </div>
 
@@ -329,7 +333,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
                 <FormLabel>Gender:</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={defaultValues.gender}>
+                  defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select Gender" />

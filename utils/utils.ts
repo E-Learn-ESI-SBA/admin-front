@@ -11,10 +11,10 @@ export const StringToArray = (str: string, separator: ',' | '-' | '_') => {
 export const groupToOptions = (groups: string[]) => {
 	// Convert array of groups to array of objects with label and value
 	return groups.map((group) => {
-		const groupArr = StringToArray(group, ',');
+		// const groupArr = StringToArray(group, '-');
 		return {
-			label: groupArr[1], // g8,
-			value: group, // 2021-g8
+			label: group, // g8
+			value: group, // g8
 		};
 	});
 };

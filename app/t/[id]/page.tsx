@@ -9,10 +9,7 @@ export default async function Page ({ params }: { params: { id: string } }) {
 
   try {
     const data = await getTeacherById(params.id);
-    console.log(data)
     const { user } = data;
-    console.log("data", data)
-    console.log(data);
     teacher = { ...(user as User) };
     teacher['password'] = "redactedPassword";
   } catch (err) {

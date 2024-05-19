@@ -1,8 +1,10 @@
 import { getStudentById } from '@/app/actions/students';
 import { getGroups, getPromos, getYears } from '@/app/actions/utils';
 import { AddOrUpdateStudent } from '@/components/students/addOrUpdateStudent'
+import { Option } from '@/components/ui/multi-select';
 import { User } from '@/types';
 import { StudentWithUser } from '@/types/students';
+import { groupToOptions } from '@/utils/utils';
 
 export default async function Page ({ params }: { params: { id: string } }) {
   let student: StudentWithUser | null = null;
@@ -10,16 +12,14 @@ export default async function Page ({ params }: { params: { id: string } }) {
   let promos: string[] = [];
   let groups: string[] = [];
   let years: string[] = [];
-
+  let groupOptions: Option[] = [];
   try {
     groups = await getGroups();
+    groupOptions = groupToOptions(groups)
     promos = await getPromos();
     years = await getYears();
     const data = await getStudentById(params.id);
-    console.log(data)
     const { group, promo, registration_number, year, user } = data;
-    console.log("data", data)
-    console.log(data);
     student = { group, promo, registration_number, year, ...(user as User) };
     student['password'] = "redactedPassword";
   } catch (err) {
@@ -45,7 +45,7 @@ export default async function Page ({ params }: { params: { id: string } }) {
 
   return (
     <div>
-        <AddOrUpdateStudent addOrUpdate='UPDATE' initDefaultValues={student} groups={groups} promos={promos} years={years}/>
+        <AddOrUpdateStudent addOrUpdate='UPDATE' initDefaultValues={student} groups={groupOptions} promos={promos} years={years}/>
     </div>
   );
 }
