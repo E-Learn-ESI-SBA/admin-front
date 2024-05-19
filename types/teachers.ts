@@ -7,9 +7,6 @@ export interface Teacher {
 
 
 export interface TeacherWithUser extends User {
-    courses?: string[];
-    classes?: string[];
-    position?: string;
 }
 // export interface TeacherWithoutId {
 //     user: User;

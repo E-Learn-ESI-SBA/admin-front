@@ -159,7 +159,6 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate }: Props) {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit((data) => {
-                    console.log("hello")
                     if (addOrUpdate == "ADD") {
                         addHandler(data)
                     } else {

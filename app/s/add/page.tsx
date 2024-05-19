@@ -2,13 +2,14 @@
 import { useState, useEffect } from "react";
 import { Csv } from "@/components/students/add/csv";
 import { AddOrUpdateStudent } from "@/components/students/addOrUpdateStudent";
-import MultipleSelector from "@/components/ui/multi-select";
+import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import { getGroups, getPromos, getYears } from "@/app/actions/utils";
+import { groupToOptions } from "@/utils/utils";
 
 const Profile = () => {
   const [selected, setSelected] = useState(0);
   const [promos, setPromos] = useState<string[]>([]);
-  const [groups, setGroups] = useState<string[]>([]);
+  const [groups, setGroups] = useState<Option[]>([]);
   const [years, setYears] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,7 @@ const Profile = () => {
           getPromos(),
           getYears()
         ]);
-        setGroups(fetchedGroups);
+        setGroups(groupToOptions(fetchedGroups));
         setPromos(fetchedPromos);
         setYears(fetchedYears);
       } catch (err) {
