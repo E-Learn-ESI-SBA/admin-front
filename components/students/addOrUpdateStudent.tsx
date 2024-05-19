@@ -60,7 +60,7 @@ const compareAndUpdateData = (updatedData: StudentWithUser, initialData: Student
       ...(user as Partial<User>)
     }
   };
-  
+
   if (student && student.user && Object.keys(student.user).length === 0 && student.constructor === Object) {
     return {};
   }
@@ -72,7 +72,6 @@ const compareAndUpdateData = (updatedData: StudentWithUser, initialData: Student
 
 export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, years, promos }: Props) {
   const router = useRouter()
-  console.log(groups, years, promos)
   const defaultValues = initDefaultValues ? initDefaultValues : {
     id: "",
     first_name: "",
@@ -94,16 +93,14 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
     group: z.string().optional(),
     gender: z.nativeEnum(Gender).optional(),
     email: z.string().min(12, { message: "must be at least 12 characters long" }),
-    phone_number: z.coerce
-      .number()
-      .min(10, { message: "must be at least 10 numbers" }).optional(),
+    phone_number: z.string().optional(),
     password: addOrUpdate == "UPDATE"
       ? z.string().min(10, { message: "password must be at least 10 characters long" }).optional().nullable()
       : z.string().min(10, { message: "password must be at least 10 characters long" })
   });
-  
+
   type TStudentSchema = z.infer<typeof studentSchemaValidator>;
-  
+
   const form = useForm<StudentWithUser>({
     resolver: zodResolver(studentSchemaValidator),
     defaultValues,
@@ -112,7 +109,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
 
   const updateHandler = async (data: StudentWithUser) => {
     const student = compareAndUpdateData(data, defaultValues);
-    if(Object.keys(student).length == 0){
+    if (Object.keys(student).length == 0) {
       toast.success("Nothing changed");
       return
     }
@@ -124,7 +121,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
           color: "white",
         },
       });
-  
+
       // setTimeout(() => {
       //   router.push('/s');
       // }, 3000);
@@ -137,15 +134,14 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
       });
     }
   };
-  
+
 
 
   const addHandler = async (data: StudentWithUser) => {
-    const { group, promo, registration_number, ...user } = data;
-    const student: Student = { group, promo, registration_number, user };
+    const { group, promo, registration_number, year, ...user } = data;
+    const student: Student = { group, promo, registration_number, year, user };
     try {
       const response = await addStudent(student)
-      console.log(response)
       toast.success("Student added successfully", {
         style: {
           backgroundColor: "green",
@@ -208,16 +204,40 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
         <div className="flex gap-4" >
           <FormField
             control={form.control}
-            name="promo"
+            name="year"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Class:</FormLabel>
+                <FormLabel>Class Year:</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}>
+                  defaultValue={defaultValues.year}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select Class" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {years?.map((year) => (
+                      <SelectItem value={year}>{year}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="promo"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Promo:</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={defaultValues.promo}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Promo" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -245,7 +265,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                  {groups?.map((group) => (
+                    {groups?.map((group) => (
                       <SelectItem value={group}>{group}</SelectItem>
                     ))}
                   </SelectContent>
@@ -309,7 +329,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
                 <FormLabel>Gender:</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}>
+                  defaultValue={defaultValues.gender}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select Gender" />

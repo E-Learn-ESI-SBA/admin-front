@@ -16,7 +16,10 @@ export default async function Page ({ params }: { params: { id: string } }) {
     promos = await getPromos();
     years = await getYears();
     const data = await getStudentById(params.id);
+    console.log(data)
     const { group, promo, registration_number, year, user } = data;
+    console.log("data", data)
+    console.log(data);
     student = { group, promo, registration_number, year, ...(user as User) };
     student['password'] = "redactedPassword";
   } catch (err) {

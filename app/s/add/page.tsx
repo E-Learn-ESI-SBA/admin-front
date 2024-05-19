@@ -69,7 +69,7 @@ const Profile = () => {
             promos={promos}
             years={years}
             groups={groups}
-          />
+          /> 
         )}
       </div>
     </div>

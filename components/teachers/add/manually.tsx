@@ -12,7 +12,7 @@ import { teacherSchemaValidator } from "@/types/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Teacher, Class, Gender, Course, TeacherWithUser, TeacherWithoutId } from "@/types/teachers";
+import { Teacher, Class, Gender, Course, TeacherWithUser } from "@/types/teachers";
 import { modulesData } from "@/static/dummy-data";
 import { classesData } from "@/static/dummy-data";
 import {
@@ -47,8 +47,8 @@ export  function Manually() {
   });
 
   const submitHandler =  (data: TeacherWithUser) => {
-    const { courses, classes, ...user } = data;
-    const teacher: TeacherWithoutId = { courses, classes, user };
+    const { courses, classes, position, ...user } = data;
+    const teacher: Teacher = { courses, classes, position, user };
     const response = addTeacher(teacher)
     console.log(response)
   };
@@ -88,7 +88,7 @@ export  function Manually() {
           />
         </div>
         <div className="flex gap-4" >
-          <FormField
+          {/* <FormField
             control={form.control}
             name="courses"
             render={({ field }) => (
@@ -111,9 +111,9 @@ export  function Manually() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="classes"
             render={({ field }) => (
@@ -136,7 +136,7 @@ export  function Manually() {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <FormField
             control={form.control}

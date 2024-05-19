@@ -2,7 +2,7 @@
 import { Student } from "@/types/students";
 import { base_url } from '@/config/constants'; 
 import axiosClient from "@/utils/axiosInstance";
-
+ 
 export async function getStudents(): Promise<Student[]> {
     'use server'
     try {
@@ -49,7 +49,6 @@ export async function updateStudent(id: string, data: Partial<Student>) {
         const response = await axiosClient.patch(`students/${id}/`, data);
         return response.data;
     } catch (err: any) {
-        console.log(err.message);
         throw new Error(err.message);
     }
 }
