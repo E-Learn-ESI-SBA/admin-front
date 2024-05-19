@@ -12,8 +12,21 @@ import { toast } from "sonner"
 
 export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
     const students: StudentWithUser[] = rawStudents.map((student: Student) => {
-      const {user, promo, group, registration_number} = student;
-      return { ...user, promo, group, registration_number}
+      const {user, promo, group, registration_number, year} = student;
+      return { 
+        id: user?.id ?? '',
+        email: user?.email ?? '',
+        first_name: user?.first_name ?? '',
+        last_name: user?.last_name ?? '',
+        promo: promo ?? '',
+        group: group ?? '',
+        registration_number: registration_number ?? '',
+        gender: user?.gender,
+        phone_number: user?.phone_number,
+        password: user?.password,
+        city: user?.city,
+        year: year,
+      };
     })
   const [localStudents, setLocalStudents] = useState<StudentWithUser[]>(students);
 
