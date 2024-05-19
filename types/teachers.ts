@@ -3,9 +3,6 @@ import { User } from ".";
 
 export interface Teacher {
     user: User | Partial<User>;
-    courses?: string[];
-    classes?: string[];
-    position?: string;
   }
 
 

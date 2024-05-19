@@ -241,8 +241,8 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {years?.map((year) => (
-                      <SelectItem value={year}>{year}</SelectItem>
+                    {promos?.map((promo) => (
+                      <SelectItem value={promo}>{promo}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

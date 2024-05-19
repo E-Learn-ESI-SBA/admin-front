@@ -6,17 +6,14 @@ import { TeacherWithUser } from '@/types/teachers';
 export default async function Page ({ params }: { params: { id: string } }) {
   let teacher: TeacherWithUser | null = null;
   let errorMessage: string | null = null;
-  let promos: string[] = [];
-  let groups: string[] = [];
-  let years: string[] = [];
 
   try {
     const data = await getTeacherById(params.id);
     console.log(data)
-    const { classes, courses, position, user } = data;
+    const { user } = data;
     console.log("data", data)
     console.log(data);
-    teacher = { classes, courses, position, ...(user as User) };
+    teacher = { ...(user as User) };
     teacher['password'] = "redactedPassword";
   } catch (err) {
     console.error("Failed to fetch teacher data:", err);
