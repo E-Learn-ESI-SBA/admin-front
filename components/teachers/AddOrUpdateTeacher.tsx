@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Teacher, Class, Gender, TeacherWithUser } from "@/types/teachers";
+import { Teacher, Gender, TeacherWithUser } from "@/types/teachers";
 import {
     Select,
     SelectContent,
@@ -22,15 +22,13 @@ import {
 import { addTeacher, updateTeacher } from "@/app/actions/teachers";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { string, z } from "zod";
+import {  z } from "zod";
 import { User } from "@/types";
-import MultipleSelector from "../ui/multi-select";
+import { useState } from "react";
 
 type Props = {
     initDefaultValues?: TeacherWithUser
     addOrUpdate: "ADD" | "UPDATE"
-    classes?: string[]
-    courses?: string[]
 }
 
 const compareAndUpdateData = (updatedData: TeacherWithUser, initialData: TeacherWithUser): Partial<Teacher> => {
@@ -48,10 +46,8 @@ const compareAndUpdateData = (updatedData: TeacherWithUser, initialData: Teacher
     if (Object.keys(modifiedData).length === 0) {
         return {};
     }
-
-    const { position, classes, courses, ...userChanges } = modifiedData;
+    const { ...userChanges } = modifiedData;
     const modifiedUser: Partial<User> = {};
-
     for (const key in userChanges) {
         if (Object.prototype.hasOwnProperty.call(userChanges, key)) {
             if ((updatedData as User)[key as keyof User] !== (initialData as User)[key as keyof User]) {
@@ -59,14 +55,9 @@ const compareAndUpdateData = (updatedData: TeacherWithUser, initialData: Teacher
             }
         }
     }
-
     const teacher: Partial<Teacher> = {
-        position: position as string | undefined,
-        classes: classes && classes.length ? classes as string[] : undefined,
-        courses: courses && courses.length ? courses as string[] : undefined,
         user: Object.keys(modifiedUser).length ? modifiedUser : undefined
     };
-
     return teacher;
 };
 
@@ -75,16 +66,15 @@ const compareAndUpdateData = (updatedData: TeacherWithUser, initialData: Teacher
 
 
 
-export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate, classes, courses }: Props) {
+export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate }: Props) {
+    const [initValues, setInitValues] = useState<TeacherWithUser | undefined>(initDefaultValues)
+
     const router = useRouter();
     const defaultValues = initDefaultValues ? initDefaultValues : {
         id: "",
         first_name: "",
         last_name: "",
-        classes: [],
-        courses: [],
         city: undefined,
-        position: undefined,
         gender: undefined,
         email: "",
         phone_number: undefined,
@@ -94,16 +84,12 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate, classes, co
         id: z.string().optional(),
         first_name: z.string().min(3, { message: "must be at least 3 characters long" }),
         last_name: z.string().min(3, { message: "must be at least 3 characters long" }),
-        position: z.string().min(3, { message: "must be at least 3 characters long" }).optional(),
-        classes: z.array(string()).optional(),
         gender: z.nativeEnum(Gender),
-        courses: z.array(string()).optional(),
         email: z.string().min(12, { message: "must be at least 12 characters long" }),
         phone_number: z.string(),
-        //   password: z.string().regex(timeRegex, { message: "invalid time format. Use HH:MM format." }),
         password: addOrUpdate == "UPDATE"
-        ? z.string().min(10, { message: "password must be at least 10 characters long" }).optional().nullable()
-        : z.string().min(10, { message: "password must be at least 10 characters long" }),
+            ? z.string().min(10, { message: "password must be at least 10 characters long" }).optional().nullable()
+            : z.string().min(10, { message: "password must be at least 10 characters long" }),
     });
 
 
@@ -114,7 +100,9 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate, classes, co
     });
 
     const updateHandler = async (data: TeacherWithUser) => {
-        const teacher = compareAndUpdateData(data, defaultValues);
+        // @ts-ignore
+        const teacher = compareAndUpdateData(data, initValues);
+        setInitValues(data)
         console.log(teacher)
         if (Object.keys(teacher).length == 0) {
             toast.success("Nothing changed");
@@ -142,11 +130,9 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate, classes, co
         }
     };
 
-
-
     const addHandler = async (data: TeacherWithUser) => {
-        const { classes, position, courses, ...user } = data;
-        const teacher: Teacher = { position, classes, courses, user };
+        const { ...user } = data;
+        const teacher: Teacher = { user };
         try {
             const response = await addTeacher(teacher)
             console.log(response)
@@ -210,35 +196,6 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate, classes, co
                         )}
                     />
                 </div>
-                <div className="flex gap-4" >
-                    {/* <FormField
-                        control={form.control}
-                        name="classes"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel>Classes:</FormLabel>
-                                <MultipleSelector
-                                    aria-label="Select classes"
-                                    className="z-10"
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    placeholder="Select classes"
-                                    options={classes}
-                                    defaultOptions={classes}
-                                    emptyIndicator={
-                                        <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                                            no results found.
-                                        </p>
-                                    }
-                                />
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    /> */}
-
-                </div>
-
-
 
                 <div className="flex gap-4" >
                     <FormField
@@ -305,23 +262,8 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate, classes, co
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="position"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel>Position</FormLabel>
-                                <FormControl>
-                                    <Input type="text" placeholder="Enter Position..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
                 </div>
-
-
-
                 <Button type="submit">
                     {addOrUpdate == "ADD" ? "Add Teacher" : "Update Teacher"}
                 </Button>

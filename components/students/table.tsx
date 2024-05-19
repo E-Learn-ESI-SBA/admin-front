@@ -1,8 +1,5 @@
 'use client'
-import { IQuiz } from "@/types/quiz";
 import { DataTable } from "../common/table";
-import { quiz } from "@/static/dummy-data/quiz/quiz";
-import { CustomColumns } from "./collomns";
 import { useState } from "react";
 import { Student, StudentWithUser } from "@/types/students";
 import students from "@/static/dummy-data/students";

@@ -8,15 +8,12 @@ import { deleteTeacher } from "@/app/actions/teachers";
 export function TeachersTable({ rawTeachers }: { rawTeachers: Teacher[] }) {
   console.log(rawTeachers)
     const teachers: TeacherWithUser[] = rawTeachers?.map((teacher: Teacher) => {
-      const {user, position, classes, courses } = teacher;
+      const {user } = teacher;
       return { 
         id: user?.id ?? '',
         email: user?.email ?? '',
         first_name: user?.first_name ?? '',
         last_name: user?.last_name ?? '',
-        classes: classes ?? [],
-        position: position ?? '',
-        courses: courses ?? [],
         gender: user?.gender,
         phone_number: user?.phone_number,
         password: user?.password,
@@ -69,21 +66,13 @@ export function TeachersTable({ rawTeachers }: { rawTeachers: Teacher[] }) {
             title: "City",
           },
           {
-            accessorKey: "position",
-            title: "Position",
-          },
-          {
             accessorKey: "phone_number",
             title: "Phone Number",
           },
         ]}
-        // customColumns={[CustomColumns]}
         defaultFilter="first_name"
-        fuzzyElements={["city", "position"]}
-      // customOperations={[{
-      //   title: "Add Quiz",
-      //   handler
-      // }]}
+        fuzzyElements={["city"]}
+    
       />
     </>
   );
