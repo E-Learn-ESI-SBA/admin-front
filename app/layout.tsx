@@ -32,7 +32,9 @@ export default function RootLayout({
         <SideBar />
         <div className="flex-1 flex-col gap-8 pl-80">
         <NavBar title="Hello Hakim" />
-          {children}
+        <div className="bg-[#F4F7FE] p-4" >
+        {children}
+        </div>
           </div>
           <Toaster />
       {/* </Suspense> */}
