@@ -2,6 +2,7 @@ import { Option } from "@/components/ui/multi-select";
 import { User } from ".";
 
 export interface Student {
+  id?:string;
   user: User | Partial<User>;
   promo?: string;
   group?: string;
