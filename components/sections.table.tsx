@@ -1,9 +1,9 @@
-import {Section} from "@/types/modules";
+import { SectionWithChapterName} from "@/types/modules";
 import {DataTable} from "@/components/common/table";
 
 
 type Props =  {
-        data : Required<Section>[]
+        data : Required<SectionWithChapterName>[]
 }
 export function SectionTable({data}:Props) {
 

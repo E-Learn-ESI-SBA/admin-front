@@ -24,6 +24,12 @@ export interface Module extends IDate {
     courses: Chapter[]; // Assuming courses can be of any type
 }
 
+export interface ChapterWithModuleName extends Chapter {
+    module_name  : string
+}
+export interface SectionWithChapterName  extends Section {
+    chapter_name : string
+}
 export interface Chapter extends IDate {
     name: string;
     order: number;
