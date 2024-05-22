@@ -1,4 +1,4 @@
-export default function QuizPage() {
+export default  async function QuizPage() {
     return (
         <div>
             <h1>Quiz Page</h1>

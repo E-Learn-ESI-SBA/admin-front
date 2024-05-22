@@ -1,12 +1,6 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
+
 import {Table} from "@tanstack/react-table";
 
-import {Button} from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -27,6 +21,10 @@ interface TablePaginationProps<T> {
 }
 
 export function TablePagination<T>({table}: TablePaginationProps<T>) {
+    const currentPage = table.getState().pagination.pageIndex;
+    const totalPages = table.getPageCount();
+    const startPage = Math.max(currentPage - 1, 0);
+    const endPage = Math.min(startPage + 3, totalPages - 1);
   return (
       <div className="flex items-center justify-between px-2">
         <div className="flex-1 text-sm text-muted-foreground">
@@ -66,20 +64,17 @@ export function TablePagination<T>({table}: TablePaginationProps<T>) {
                                             onClick={() => table.previousPage()}
                         />
                     </PaginationItem>
-                    {table.getPageOptions().map((page,idx) => {
-                        // show only 3 pages
-                        if (table.getState().pagination.pageIndex < page + 1 && table.getState().pagination.pageIndex < table.getState().pagination.pageIndex + 3     ) return  (
-                        <PaginationItem key={idx}>
-                            <PaginationLink href="#"
-                                            isActive={table.getState().pagination.pageIndex === page}
-                                            onClick={() => table.setPageIndex(page)}
+                    {Array.from({ length: endPage - startPage + 1 }, (_, idx) => startPage + idx).map(page => (
+                        <PaginationItem key={page}>
+                            <PaginationLink
+                                href="#"
+                                isActive={currentPage === page}
+                                onClick={() => table.setPageIndex(page)}
                             >
                                 {page + 1}
                             </PaginationLink>
                         </PaginationItem>
-                    )
-                    else return null
-                    })}
+                    ))}
                     <PaginationItem>
                         <PaginationEllipsis />
                     </PaginationItem>
@@ -96,43 +91,3 @@ export function TablePagination<T>({table}: TablePaginationProps<T>) {
       </div>
   );
 }
-/*
-<div className="flex items-center space-x-2">
-  <Button
-      variant="outline"
-      className="hidden h-8 w-8 p-0 lg:flex"
-      onClick={() => table.setPageIndex(0)}
-      disabled={!table.getCanPreviousPage()}
-  >
-    <span className="sr-only">Go to first page</span>
-    <DoubleArrowLeftIcon className="h-4 w-4"/>
-  </Button>
-  <Button
-      variant="outline"
-      className="h-8 w-8 p-0"
-      onClick={() => table.previousPage()}
-      disabled={!table.getCanPreviousPage()}
-  >
-    <span className="sr-only">Go to previous page</span>
-    <ChevronLeftIcon className="h-4 w-4"/>
-  </Button>
-  <Button
-      variant="outline"
-      className="h-8 w-8 p-0"
-      onClick={() => table.nextPage()}
-      disabled={!table.getCanNextPage()}
-  >
-    <span className="sr-only">Go to next page</span>
-    <ChevronRightIcon className="h-4 w-4"/>
-  </Button>
-  <Button
-      variant="outline"
-      className="hidden h-8 w-8 p-0 lg:flex"
-      onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-      disabled={!table.getCanNextPage()}
-  >
-    <span className="sr-only">Go to last page</span>
-    <DoubleArrowRightIcon className="h-4 w-4"/>
-  </Button>
-</div>
-*/
