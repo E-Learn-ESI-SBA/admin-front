@@ -3,19 +3,19 @@ import React from "react";
 
 const cards = [
   {
-    image: "/modules/card-pic.png",
+    image: "/assets/card-pic.png",
     subject: "Architectures Évoluées des Ordinateurs",
     coef: 4,
     duration: "18 Semaines",
   },
   {
-    image: "/modules/card-pic.png",
+    image: "/assets/card-pic.png",
     subject: "Architectures Évoluées des Ordinateurs",
     coef: 4,
     duration: "19 Semaines",
   },
   {
-    image: "/modules/card-pic.png",
+    image: "/assets/card-pic.png",
     subject: "Architectures Évoluées des Ordinateurs",
     coef: 4,
     duration: "19 Semaines",
@@ -23,7 +23,7 @@ const cards = [
 ];
 export const Courses = () => {
   return (
-    <div className="w-full flex justify-between m-8">
+    <div className="w-full flex justify-between gap-2 m-8">
       <Card card={cards[0]} />
       <Card card={cards[1]} />
       <Card card={cards[2]} />
