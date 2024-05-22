@@ -33,3 +33,9 @@ export interface IPayload {
     role:string
     
 }
+
+export interface SelectedUser {
+    email:string
+    username:string
+    id:string
+}
