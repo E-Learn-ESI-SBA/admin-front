@@ -13,26 +13,42 @@ type Props = {
     setStep:  Dispatch<SetStateAction<FormState>>
 }
 export const FirstStep = ({setStep}:Props) => {
-    const form = useForm<TFirstZodSchema>({
-        resolver: zodResolver(FirstZodSchema),
-        defaultValues: {
-            title: "",
+    const getDefaultValues = ():TFirstZodSchema => {
+        let defaultValue:TFirstZodSchema = {
+            name: "",
             speciality: "",
             semester: 1,
             coefficient: 1,
             year: ""
-        },
+        }
+        try {
+            defaultValue = JSON.parse(sessionStorage.getItem("module-1") ?? "{}")  as TFirstZodSchema
+
+        }catch (e) {
+            console.log(e)
+        }finally {
+            return defaultValue
+        }
+    }
+    const form = useForm<TFirstZodSchema>({
+        resolver: zodResolver(FirstZodSchema),
+        defaultValues:getDefaultValues(),
         mode:"onSubmit"
     })
     const submitHandler = (value : TFirstZodSchema) => {
         sessionStorage.setItem("module-1", JSON.stringify(value))
-        toast.success("First Step Saved ✔️")
-        setStep(() => FormState.ADVANCED)
+        toast.success("First Step Saved ✔️",{
+            style:{
+                background:"green",
+                color:"white"
+            }
+        })
+        setStep(() => FormState.CONFIRM)
 
     }
     return (
         <Form {...form} >
-            <form className="flex flex-col gap-4 p-6" onSubmit={form.handleSubmit(submitHandler)}>
+            <form className="flex flex-col gap-4 w-full p-6" onSubmit={form.handleSubmit(submitHandler)}>
                 <FormField render={({field}) => {
                     return (
                         <FormItem className="w-full">
@@ -43,8 +59,8 @@ export const FirstStep = ({setStep}:Props) => {
                             <FormMessage/>
                         </FormItem>
                     )
-                }} name="title" control={form.control}/>
-                <div className="flex justify-between items-center">
+                }} name="name" control={form.control}/>
+                <div className="flex justify-between gap-6 items-center">
 
                     <FormField render={({field}) => {
                         return (
@@ -62,21 +78,21 @@ export const FirstStep = ({setStep}:Props) => {
                             <FormItem className="w-full">
                                 <FormLabel htmlFor="title">Semester</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="number" max={2} min={1} defaultValue={1}/>
+                                    <Input {...field} type="number" max={2} min={1} />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
                         )
                     }} name="semester" control={form.control}/>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between gap-6 items-center">
 
                     <FormField render={({field}) => {
                         return (
                             <FormItem className="w-full">
                                 <FormLabel htmlFor="title">Coefficient</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="number" max={10} min={1} defaultValue={1}/>
+                                    <Input {...field} type="number" max={10} min={1} />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
@@ -95,7 +111,7 @@ export const FirstStep = ({setStep}:Props) => {
                         )
                     }} name="speciality" control={form.control}/>
                 </div>
-                <Button className="w-fit p-4 self-end" type="submit">
+                <Button className="w-fit p-4 px-8 self-end" type="submit">
                         Next
                 </Button>
             </form>

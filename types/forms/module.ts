@@ -2,7 +2,7 @@ import {z} from "zod";
 
 export const FirstZodSchema = z.object({
     id: z.string().optional(),
-    title: z.string().min(2, { message: "must be at least 2 characters long" }),
+    name: z.string().min(2, { message: "must be at least 2 characters long" }),
     speciality: z.string().optional().default(""),
     semester: z.coerce.number().int().positive().min(1).max(2,"Please Write a valid value"),
     coefficient: z.coerce.number().int().positive().min(1,"Please Write a valid value").max(10,"Please Write a valid value"),
@@ -17,15 +17,14 @@ export const  SecondSchema = z.object({
         description:z.string().min(80,""),
     points: z.array(
         z.object({
-            value: z.string().min(3, { message: "must be at least 3 points" }),
+            value: z.string().min(3, { message: "Point Can't be empty" }),
         }),
-    ),
-    instructors: z.array( z.object({ value : z.string().uuid().min(1,"Please add at least one instructor"), label: z.string()})),
+    ).min(3,"must be at least 3 points"),
+    instructors: z.array( z.object({ value : z.string().min(1,"Please add at least one instructor"), label: z.string()})),
 })
 export type TSecondSchema = z.infer<typeof SecondSchema>;
 export enum FormState {
     OVERVIEW = 'overview',
-    ADVANCED = 'advanced',
     CONFIRM = 'confirm',
 }
 

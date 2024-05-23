@@ -15,9 +15,9 @@ export interface Module extends IDate {
     speciality: string;
     semester: number;
     coefficient: number;
-    teacher_id: string;
+    teacher_id?: string;
     instructors: string[];
-    isPublic: boolean;
+    isPublic?: boolean;
     description: string;
     plan: string[];
     image: string;

@@ -1,5 +1,6 @@
-import {Dispatch, SetStateAction} from "react";
-import {FormState, SecondSchema, TSecondSchema} from "@/types/forms/module";
+"use client"
+import {Dispatch, SetStateAction, useState} from "react";
+import {FormState, SecondSchema, TFirstZodSchema, TSecondSchema} from "@/types/forms/module";
 import {useFieldArray, useForm} from "react-hook-form";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Label} from "@/components/ui/label";
@@ -13,6 +14,9 @@ import {toast} from "sonner";
 import {Separator} from "@/components/ui/separator";
 import {SelectedUser} from "@/types";
 import MultipleSelector, {Option} from "@/components/ui/multi-select";
+import {Module} from "@/types/modules";
+import firebaseService from "@/injections/firebase";
+import {AbstractFirebase} from "@/lib/firebase";
 
 type Props = {
     setStep:  Dispatch<SetStateAction<FormState>>
@@ -20,6 +24,7 @@ type Props = {
     setCurrentImage: Dispatch<SetStateAction<File | null>>
 }
 export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
+
     const MAX_FILE_SIZE = 4 * 1024 * 1024;
     const form = useForm<TSecondSchema>({
         mode:"onSubmit",
@@ -29,15 +34,41 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
             description: ""
         }
     })
-    const submitHandler = (value:TSecondSchema) => {
-            sessionStorage.setItem("module-2",JSON.stringify(value))
+    const [loading,setLoading] = useState<boolean>(false)
+    const submitHandler = async (value:TSecondSchema) => {
+        try {
+            const moduleOverview = JSON.parse(sessionStorage.getItem("module-1") ?? '{}') as TFirstZodSchema
+            const data:Module = {
+                ...moduleOverview,
+                ...value,
+                plan: value.points.map((point) => point.value),
+                instructors: value.instructors.map((instructor) => instructor.value),
+                image:"/store/img.jpg",
+                courses:[]
+            }
+            if (currentImage) {
+                const blob =(await  firebaseService.get<AbstractFirebase>(AbstractFirebase.name).uploadFile(currentImage)) as  {imageUrl:string}
+                data.image = blob.imageUrl
+                console.log("uploaded")
+            }
             toast.success("Second Step Completed",{
                 style:{
                     color:"white",
                     background:"green"
                 }
             })
+            console.log(data)
             setStep(FormState.CONFIRM)
+        }catch (e) {
+            console.log(e)
+            toast.error("An error occurred",{
+                style:{
+                    color:"white",
+                    background:"red"
+                }
+
+            })
+        }
     }
     const {fields,append,remove} = useFieldArray({
         control:form.control,
@@ -69,9 +100,10 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
         label: user.username,
         value: user.id,
     }));
+    console.log("Form",form.formState.errors)
     return (
         <Form {...form}>
-            <form className="w-full h-full p-4" onSubmit={form.handleSubmit(submitHandler)}>
+            <form className="w-full h-full p-4 flex flex-col gap-4" onSubmit={form.handleSubmit(submitHandler)}>
                 <div
                     className="flex flex-col gap-4 border justify-center relative items-center p-6 w-full min-h-[100px]">
                     {!currentImage ? (
@@ -143,7 +175,7 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
                                         {...field}
                                         placeholder="Distributed Transactions"
                                         id="title"
-                                        className="min-h-96 p-8 text-xs sm:text-sm text-black rounded-3xl"
+                                        className="min-h-96 p-8 text-xs sm:text-sm  text-black rounded-lg"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -157,20 +189,21 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
                         <h5 className="text-secondary text-lg xl:text-3xl lg:text-xl font-medium">
                             What you will learn in this course :
                         </h5>
-                        <div className="grid grid-cols-2  gap-4">
+                        <div className="flex flex-col gap-2">
+
+                        <div className="grid grid-cols-2 items-center  gap-4">
                             {fields.map((item, k) => {
                                 return (
                                     <div className="flex gap-2 items-center" key={item.id}>
                                         <FormField
                                             name={`points.${k}.value`}
                                             render={({field}) => {
-                                                console.log("Field", field, k);
                                                 return (
                                                     <div
                                                         className="flex w-full items-center gap-2"
                                                         key={k}
                                                     >
-                                                        <FormItem className="text-text-GRAY flex gap-2 rounded-3xl p-4">
+                                                        <FormItem className="text-text-GRAY flex gap-2 items-center rounded-3xl p-4">
                                                             <FormLabel htmlFor="title">
                                                                 <CircleCheck
                                                                     className="w-8 h-8 text-white "
@@ -194,6 +227,7 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
                                             key={k}
                                         />
                                         <Button
+
                                             variant="ghost"
                                             disabled={fields.length < 2}
                                             className="p-4"
@@ -209,9 +243,14 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
                                 );
                             })}
                         </div>
+                        {form.formState.errors.points?.message && <span className="text-red-origin text-center p-2">
+                             {form.formState.errors.points?.message}
+                        </span>}
+                        </div>
                         <Button
+                            type="button"
                             className="flex mt-4 p-4 gap-2"
-                            variant="ghost"
+                            variant="outline"
                             onClick={() =>
                                 append({
                                     value: "",
@@ -224,11 +263,11 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
                     </div>
 
                 <div className="flex justify-between">
-                    <Button variant="ghost" className="p-4 w-fit" onClick={() => setStep(FormState.OVERVIEW)}>
+                    <Button variant="outline" className="p-4 w-fit px-8 "  onClick={() => setStep(FormState.OVERVIEW)}>
                         Previous
                     </Button>
-                    <Button className="p-4 w-fit" type="submit">
-                                Next
+                    <Button className="p-4 w-fit px-8 " type="submit" disabled={loading}>
+                                Confirm
                         </Button>
                 </div>
             </form>

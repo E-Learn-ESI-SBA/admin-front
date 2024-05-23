@@ -39,3 +39,14 @@ export interface SelectedUser {
     username:string
     id:string
 }
+
+export type FConfig = {
+    apiKey: string,
+    authDomain: string,
+    projectId: string,
+    storageBucket: string,
+    messagingSenderId: string,
+    appId: string,
+    measurementId: string
+
+}
