@@ -3,9 +3,9 @@ import { cookies } from "next/headers";
 import { GET_COURSES } from "@/config/urls/materials";
 import { IResponse } from "@/types/http";
 import { IError } from "@/types/errors";
-import {Chapter} from "@/types/modules";
+import {ChapterWithModuleName} from "@/types/modules";
 
-export const getCourses = async (): Promise<IResponse<Required<Chapter>[]>> => {
+export const getCourses = async (): Promise<IResponse<Required<ChapterWithModuleName>[]>> => {
     try {
         const response = await fetch(GET_COURSES, {
             method: "GET",
@@ -14,7 +14,7 @@ export const getCourses = async (): Promise<IResponse<Required<Chapter>[]>> => {
             },
         });
         const res = (await response.json()) as {
-            data?: Required<Chapter>[];
+            data?: Required<ChapterWithModuleName>[];
             message?: string;
         };
         if (!response.ok) {

@@ -15,15 +15,21 @@ export interface Module extends IDate {
     speciality: string;
     semester: number;
     coefficient: number;
-    teacher_id: string;
+    teacher_id?: string;
     instructors: string[];
-    isPublic: boolean;
+    isPublic?: boolean;
     description: string;
     plan: string[];
     image: string;
     courses: Chapter[]; // Assuming courses can be of any type
 }
 
+export interface ChapterWithModuleName extends Chapter {
+    module_name  : string
+}
+export interface SectionWithChapterName  extends Section {
+    chapter_name : string
+}
 export interface Chapter extends IDate {
     name: string;
     order: number;

@@ -33,3 +33,20 @@ export interface IPayload {
     role:string
     
 }
+
+export interface SelectedUser {
+    email:string
+    username:string
+    id:string
+}
+
+export type FConfig = {
+    apiKey: string,
+    authDomain: string,
+    projectId: string,
+    storageBucket: string,
+    messagingSenderId: string,
+    appId: string,
+    measurementId: string
+
+}

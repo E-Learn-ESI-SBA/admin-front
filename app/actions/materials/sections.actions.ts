@@ -1,11 +1,11 @@
 "use server";
 import { cookies } from "next/headers";
 import { GET_SECTIONS } from "@/config/urls/materials";
-import { Section} from "@/types/modules";
+import { SectionWithChapterName} from "@/types/modules";
 import { IResponse } from "@/types/http";
 import { IError } from "@/types/errors";
 
-export const getSections = async (): Promise<IResponse<Required<Section>[]>> => {
+export const getSections = async (): Promise<IResponse<Required<SectionWithChapterName>[]>> => {
     try {
         const response = await fetch(GET_SECTIONS, {
             method: "GET",
@@ -14,7 +14,7 @@ export const getSections = async (): Promise<IResponse<Required<Section>[]>> => 
             },
         });
         const res = (await response.json()) as {
-            data?: Required<Section>[];
+            data?: Required<SectionWithChapterName>[];
             message?: string;
         };
         if (!response.ok) {
