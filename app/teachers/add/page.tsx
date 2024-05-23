@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Csv } from "@/components/teachers/add/csv";
-import { Manually } from "@/components/teachers/add/manually";
+import { AddOrUpdateTeacher } from "@/components/teachers/AddOrUpdateTeacher";
 
 const Profile = () => { 
   const [selected, setSelected] = useState(0);
@@ -25,7 +25,7 @@ const Profile = () => {
           </a>
         </div>
 
-        {selected ? <Csv /> : <Manually />}
+        {selected ? <Csv /> : <AddOrUpdateTeacher addOrUpdate="ADD"/>}
       </div>
     </div>
   );

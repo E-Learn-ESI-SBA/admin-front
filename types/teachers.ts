@@ -2,23 +2,23 @@ import { Option } from "@/components/ui/multi-select";
 import { User } from ".";
 
 export interface Teacher {
-    id: string;
-    user: User;
-    courses?: Option[];
-    classes?: Option[];
-    points?: number;
+    id?:string;
+    user: User | Partial<User>;
   }
 
-export interface TeacherWithoutId {
-    user: User;
-    courses?: Option[];
-    classes?: Option[];
-    points?: number;
-  }
 
-export interface TeacherWithUser extends Teacher, User {}
+export interface TeacherWithUser extends User {
+}
+// export interface TeacherWithoutId {
+//     user: User;
+//     courses?: Option[];
+//     classes?: Option[];
+//     points?: number;
+//   }
 
-export interface TeacherWithUserWithoutId extends TeacherWithoutId, User {}
+// export interface TeacherWithUser extends Teacher, User {}
+
+// export interface TeacherWithUserWithoutId extends TeacherWithoutId, User {}
 
   export enum Class {
     first_year = "1CP",

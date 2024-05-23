@@ -24,50 +24,48 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { User } from "@/types";
+import { Option } from "../ui/multi-select";
+import { useState } from "react";
 
 type Props = {
   initDefaultValues?: StudentWithUser
   addOrUpdate: "ADD" | "UPDATE"
+  groups?: Option[]
+  promos?: string[]
+  years?: string[]
 }
-
 
 
 const compareAndUpdateData = (updatedData: StudentWithUser, initialData: StudentWithUser): Partial<Student> => {
   const modifiedData: Partial<StudentWithUser> = {};
 
   for (const key in updatedData) {
-    if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
-      if (updatedData[key as keyof StudentWithUser] !== initialData[key as keyof StudentWithUser]) {
-        modifiedData[key as keyof StudentWithUser] = updatedData[key as keyof StudentWithUser];
-      }
+    if (updatedData[key as keyof StudentWithUser] !== initialData[key as keyof StudentWithUser]) {
+      modifiedData[key as keyof StudentWithUser] = updatedData[key as keyof StudentWithUser];
     }
   }
 
-  if (Object.keys(modifiedData).length === 0 && modifiedData.constructor === Object) {
+  if (Object.keys(modifiedData).length === 0) {
     return {};
   }
-  console.log(modifiedData)
-  const { group, promo, registration_number, year, password, ...user } = modifiedData;
+
+  const { group, promo, registration_number, year, ...user } = modifiedData;
   const student: Partial<Student> = {
     group,
     promo,
     registration_number,
     year,
-    user: {
-      ...(user as Partial<User>)
-    }
+    user: Object.keys(user).length > 0 ? user as Partial<User> : undefined
   };
-  
-  if (student && student.user && Object.keys(student.user).length === 0 && student.constructor === Object) {
-    return {};
-  }
 
   return student;
 };
 
 
 
-export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
+export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, years, promos }: Props) {
+  const [initValues, setInitValues] = useState<StudentWithUser | undefined>(initDefaultValues)
+
   const router = useRouter()
   const defaultValues = initDefaultValues ? initDefaultValues : {
     id: "",
@@ -75,11 +73,13 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
     last_name: "",
     year: undefined,
     promo: undefined,
+    group_promo: undefined,
     city: undefined,
     gender: undefined,
-    email: "undefined",
+    email: "",
     phone_number: undefined,
     password: undefined,
+    valid_group: undefined
   }
 
   const studentSchemaValidator = z.object({
@@ -88,18 +88,17 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
     last_name: z.string().min(2, { message: "must be at least 10 characters long" }),
     promo: z.string().optional(),
     group: z.string().optional(),
+    year: z.string().optional(),
     gender: z.nativeEnum(Gender).optional(),
     email: z.string().min(12, { message: "must be at least 12 characters long" }),
-    phone_number: z.coerce
-      .number()
-      .min(10, { message: "must be at least 10 numbers" }).optional(),
+    phone_number: z.string().optional(),
     password: addOrUpdate == "UPDATE"
       ? z.string().min(10, { message: "password must be at least 10 characters long" }).optional().nullable()
       : z.string().min(10, { message: "password must be at least 10 characters long" })
   });
-  
+
   type TStudentSchema = z.infer<typeof studentSchemaValidator>;
-  
+
   const form = useForm<StudentWithUser>({
     resolver: zodResolver(studentSchemaValidator),
     defaultValues,
@@ -108,7 +107,9 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
 
   const updateHandler = async (data: StudentWithUser) => {
     const student = compareAndUpdateData(data, defaultValues);
-    if(Object.keys(student).length == 0){
+    setInitValues(data)
+
+    if (Object.keys(student).length == 0) {
       toast.success("Nothing changed");
       return
     }
@@ -120,10 +121,10 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
           color: "white",
         },
       });
-  
-      setTimeout(() => {
-        router.push('/s');
-      }, 3000);
+
+      // setTimeout(() => {
+      //   router.push('/s');
+      // }, 3000);
     } catch (error) {
       toast.error("Error when updating Student", {
         style: {
@@ -133,14 +134,14 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
       });
     }
   };
-  
+
 
 
   const addHandler = async (data: StudentWithUser) => {
-    const { group, promo, registration_number, ...user } = data;
-    const student: Student = { group, promo, registration_number, user };
+    const { group, promo, registration_number, year, ...user } = data;
+    const student: Student = { group, promo, registration_number, year, user };
     try {
-      await addStudent(student)
+      const response = await addStudent(student)
       toast.success("Student added successfully", {
         style: {
           backgroundColor: "green",
@@ -148,7 +149,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
         },
       });
       setTimeout(() => {
-        router.push('/s')
+        router.push(`/s/${response.user.id}`)
       }, 3000)
     } catch {
       toast.error("Error when adding student", {
@@ -203,10 +204,10 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
         <div className="flex gap-4" >
           <FormField
             control={form.control}
-            name="promo"
+            name="year"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Class:</FormLabel>
+                <FormLabel>Class Year:</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}>
@@ -216,11 +217,33 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={Class.first_year}>1CP</SelectItem>
-                    <SelectItem value={Class.second_year}>2CP</SelectItem>
-                    <SelectItem value={Class.third_year}>1CS</SelectItem>
-                    <SelectItem value={Class.fourth_year}>2CS</SelectItem>
-                    <SelectItem value={Class.fifth_year}>3CS</SelectItem>
+                    {years?.map((year,i) => (
+                      <SelectItem key={i} value={year}>{year}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="promo"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Promo:</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Promo" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {promos?.map((promo,i) => (
+                      <SelectItem key={i} value={promo}>{promo}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -234,27 +257,27 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate }: Props) {
               <FormItem className="w-full">
                 <FormLabel>Group:</FormLabel>
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}>
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value} 
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Groupe" />
+                      <SelectValue placeholder="Select Group" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={Class.first_year}>1</SelectItem>
-                    <SelectItem value={Class.second_year}>2</SelectItem>
-                    <SelectItem value={Class.third_year}>1</SelectItem>
-                    <SelectItem value={Class.fourth_year}>2</SelectItem>
-                    <SelectItem value={Class.fifth_year}>3</SelectItem>
-                    <SelectItem value={Class.fifth_year}>4</SelectItem>
-                    <SelectItem value={Class.fifth_year}>5</SelectItem>
+                    {groups?.map((group) => (
+                      <SelectItem key={group.value} value={group.value}>
+                        {group.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
+
 
         </div>
 

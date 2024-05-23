@@ -1,8 +1,5 @@
 'use client'
-import { IQuiz } from "@/types/quiz";
 import { DataTable } from "../common/table";
-import { quiz } from "@/static/dummy-data/quiz/quiz";
-import { CustomColumns } from "./collomns";
 import { useState } from "react";
 import { Student, StudentWithUser } from "@/types/students";
 import students from "@/static/dummy-data/students";
@@ -12,8 +9,22 @@ import { toast } from "sonner"
 
 export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
     const students: StudentWithUser[] = rawStudents.map((student: Student) => {
-      const {user, promo, group, registration_number} = student;
-      return { ...user, promo, group, registration_number}
+      const {user, promo, group,  promo_group, registration_number, year} = student;
+      return { 
+        id: user?.id ?? '',
+        email: user?.email ?? '',
+        first_name: user?.first_name ?? '',
+        last_name: user?.last_name ?? '',
+        promo: promo ?? '',
+        group: group ?? '',
+        registration_number: registration_number ?? '',
+        promo_group: promo_group ?? '',
+        gender: user?.gender,
+        phone_number: user?.phone_number,
+        password: user?.password,
+        city: user?.city,
+        year: year,
+      };
     })
   const [localStudents, setLocalStudents] = useState<StudentWithUser[]>(students);
 
@@ -75,6 +86,10 @@ export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
           {
             accessorKey: "registration_number",
             title: "Registration Number",
+          },
+          {
+            accessorKey: "promo_group",
+            title: "Group Promo",
           },
         ]}
         // customColumns={[CustomColumns]}
