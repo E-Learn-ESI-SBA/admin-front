@@ -1,17 +1,15 @@
-import {injectable} from "inversify";
 import {FirebaseApp, initializeApp} from "firebase/app";
 import {FirebaseStorage, getDownloadURL, getStorage, ref, uploadBytesResumable} from "firebase/storage"
 import {firebaseConfig} from "@/config/firebase";
-@injectable()
+import {FConfig} from "@/types";
 export abstract class AbstractFirebase {
     abstract  uploadFile(file: File ): Promise<unknown>
 }
 
-@injectable()
 export class Firebase extends AbstractFirebase{
     private firebase : FirebaseApp
     private storage: FirebaseStorage
-    constructor() {
+    constructor(firebaseConfig:FConfig) {
         super()
         this.firebase = initializeApp(firebaseConfig)
         this.storage = getStorage(this.firebase)
@@ -42,3 +40,4 @@ export class Firebase extends AbstractFirebase{
     });
     }
 }
+export const firebaseService = new Firebase(firebaseConfig)

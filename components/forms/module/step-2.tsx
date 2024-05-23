@@ -15,8 +15,8 @@ import {Separator} from "@/components/ui/separator";
 import {SelectedUser} from "@/types";
 import MultipleSelector, {Option} from "@/components/ui/multi-select";
 import {Module} from "@/types/modules";
-import firebaseService from "@/injections/firebase";
-import {AbstractFirebase} from "@/lib/firebase";
+
+import {firebaseService} from "@/lib/firebase";
 
 type Props = {
     setStep:  Dispatch<SetStateAction<FormState>>
@@ -47,7 +47,7 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
                 courses:[]
             }
             if (currentImage) {
-                const blob =(await  firebaseService.get<AbstractFirebase>(AbstractFirebase.name).uploadFile(currentImage)) as  {imageUrl:string}
+                const blob =(await  firebaseService.uploadFile(currentImage)) as  {imageUrl:string}
                 data.image = blob.imageUrl
                 console.log("uploaded")
             }
