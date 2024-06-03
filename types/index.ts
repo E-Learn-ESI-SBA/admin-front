@@ -13,6 +13,7 @@ export interface SideBarItem {
     isActive?: boolean;
   }
 
+  // User
 export interface User {
   id: string;
   email: string;
@@ -24,6 +25,20 @@ export interface User {
   phone_number?: string;
   password?: string;
 }
+
+
+export type TPayload = {
+  id: string;
+  email: string;
+  role: string;
+  iat?: number;
+  exp?: number;
+  group: string;
+  year: string;
+  username: string;
+  avatar:string
+};
+
 export interface IPayload {
     id: string;
     email:string
