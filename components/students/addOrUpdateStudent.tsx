@@ -65,7 +65,6 @@ const compareAndUpdateData = (updatedData: StudentWithUser, initialData: Student
 
 export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, years, promos }: Props) {
   const [initValues, setInitValues] = useState<StudentWithUser | undefined>(initDefaultValues)
-
   const router = useRouter()
   const defaultValues = initDefaultValues ? initDefaultValues : {
     id: "",
@@ -349,8 +348,6 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
             )}
           />
         </div>
-
-
 
         <Button type="submit">
           {addOrUpdate == "ADD" ? "Add Student" : "Update Student"}

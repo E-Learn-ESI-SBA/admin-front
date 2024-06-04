@@ -33,6 +33,18 @@ export async function addStudent(data: Student) {
     }
 }
 
+export async function addStudents(data: Student[]) {
+    'use server'
+    try {
+        const response = await axiosClient.post('students/many/', data);
+        return response.data;
+    } catch (err: any) {
+        console.log(err);
+        throw new Error('Failed to create new students');
+    }
+}
+
+
 export async function deleteStudent(id: string) {
     'use server'
     try {
