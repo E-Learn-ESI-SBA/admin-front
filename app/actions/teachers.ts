@@ -33,6 +33,18 @@ export async function addTeacher(data: Teacher) {
     }
 }
 
+export async function addTeachers(data: Teacher[]) {
+    'use server'
+    try {
+        const response = await axiosClient.post('teachers/many/', data);
+        return response.data;
+    } catch (err: any) {
+        console.log(err.message);
+        throw new Error('Failed to create new teachers');
+    }
+}
+
+
 export async function deleteTeacher(id: string) {
     'use server'
     try {

@@ -3,7 +3,7 @@ import { Teacher } from "@/types/teachers";
 import Link from "next/link";
 import { getTeachers } from "../actions/teachers";
 
-export default async function StudentDashboard() {
+export default async function TeacherDashboard() {
   let teachers: Teacher[] = [];
   let errorMessage: string | null = null;
 
