@@ -1,6 +1,6 @@
-import NavBar from "@/components/layouts/navbar";
 import { SideBar } from "@/components/layouts/sidebar";
 import { sideBarItems } from "@/data/side-bar-items";
+import Header from "@/components/layouts/header";
 
 export default function RootLayout({
   children,
@@ -11,7 +11,7 @@ export default function RootLayout({
     <div className="w-full h-full flex">
       <SideBar  sideBarItems={sideBarItems} />
       <div className="flex-1 flex-col  h-full ">
-          <NavBar title="hello"/>
+          <Header />
           <div className="p-6">
           {children}
           </div>
