@@ -263,7 +263,7 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate }: Props) {
                     />
 
                 </div>
-                <Button type="submit">
+                <Button type="submit" className="p-5 w-fit self-end">
                     {addOrUpdate == "ADD" ? "Add Teacher" : "Update Teacher"}
                 </Button>
 

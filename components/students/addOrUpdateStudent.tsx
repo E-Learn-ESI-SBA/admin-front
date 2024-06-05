@@ -349,7 +349,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
           />
         </div>
 
-        <Button type="submit">
+        <Button type="submit" className="w-fit self-end">
           {addOrUpdate == "ADD" ? "Add Student" : "Update Student"}
         </Button>
 
