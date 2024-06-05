@@ -1,7 +1,7 @@
 import { StudentsTable } from "@/components/students/table";
 import { Student } from "@/types/students";
 import Link from "next/link";
-import { getStudents } from "../actions/students";
+import { getStudents } from "@/app/actions/students";
 
 export default async function StudentDashboard() {
   let students: Student[] = [];
