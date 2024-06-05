@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import { SideBar } from "@/components/layouts/sidebar";
-// import { Suspense } from "react";
 import { Montserrat } from 'next/font/google';
-import NavBar from "@/components/layouts/navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 const monts = Montserrat({
@@ -28,16 +24,8 @@ export default function RootLayout({
   return (
     <html lang="en">
          <body  className={` flex ${monts.className} `} >
-      {/* <Suspense> */}
-        <SideBar />
-        <div className="flex-1 flex-col gap-8 pl-80">
-        <NavBar title="Hello Hakim" />
-        <div className="bg-[#F4F7FE] p-4" >
         {children}
-        </div>
-          </div>
           <Toaster />
-      {/* </Suspense> */}
     </body>
     </html>
   );

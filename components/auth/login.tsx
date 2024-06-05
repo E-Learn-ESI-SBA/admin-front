@@ -18,8 +18,12 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { login, StoreTokenRequest } from "@/app/actions";
+import { login } from "@/app/actions";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { IError } from "@/types/errors";
+import { useUserStore } from "@/store/user";
+import { TPayload } from "@/types";
 
 export const authSchema = z.object({
   email: z.string().email().min(2, "Email is required"),
@@ -29,6 +33,9 @@ export const authSchema = z.object({
 export type TAuthSchema = z.infer<typeof authSchema>;
 
 export function SignInAccount() {
+  const { setUser } = useUserStore(state => ({
+    setUser: state.setUser,
+  }))
   const router = useRouter();
   const form = useForm<TAuthSchema>({
     mode: "onChange",
@@ -39,11 +46,30 @@ export function SignInAccount() {
     },
   });
   const submitHandler = async (data: TAuthSchema) => {
-    const response: StoreTokenRequest = await login(data);
-    localStorage.setItem("accessToken", response["access"]);
-    router.replace("/");
-    // console.log(response.data)
-    // console.log(response);
+    try {
+      const response = await login(data);
+      // if()
+      const accessToken = response["access"]
+      const payload = JSON.parse(atob(accessToken.split(".")[1])) as TPayload
+      setUser(payload)
+      toast.success("Login successful", {
+        style: {
+          backgroundColor: "green",
+          color: "white",
+        },
+      });
+      setTimeout(() => {
+        router.replace("/");
+      }, 3000);
+    } catch (e: any) {
+      const err = new IError(e)
+      toast.error(err.message, {
+        style: {
+          backgroundColor: "red",
+          color: "white",
+        },
+      });
+    }
   };
   return (
     <Form {...form}>
@@ -59,7 +85,7 @@ export function SignInAccount() {
             use your email/password combination to login
           </CardDescription>
         </CardHeader>
-        {}
+        { }
         <CardContent className="grid gap-4">
           <FormField
             control={form.control}

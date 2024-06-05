@@ -1,7 +1,7 @@
 import { TeachersTable } from "@/components/teachers/table";
 import { Teacher } from "@/types/teachers";
 import Link from "next/link";
-import { getTeachers } from "../actions/teachers";
+import { getTeachers } from "@/app/actions/teachers";
 
 export default async function TeacherDashboard() {
   let teachers: Teacher[] = [];
