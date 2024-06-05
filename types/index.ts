@@ -5,10 +5,11 @@ export interface SideBarItem {
       | "menu"
       | "courses"
       | "profile"
+      | "students"
+      | "teachers"
       | "settings"
       | "logout"
-      | "discussions"
-      | "schedules";
+      | "discussions";
     url: string;
     isActive?: boolean;
   }

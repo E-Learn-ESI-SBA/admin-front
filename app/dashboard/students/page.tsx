@@ -16,7 +16,7 @@ export default async function StudentDashboard() {
 
   return (
     <div className="flex flex-col gap-4 py-4">
-      <Link href='/s/add' className="px-4 py-2 text-white bg-[#2C62EE] self-end rounded-lg mr-2">
+      <Link href='/dashboard/students/add' className="px-4 py-2 text-white bg-[#2C62EE] self-end rounded-lg mr-2">
         + Add Student
       </Link>
       {errorMessage ? (
