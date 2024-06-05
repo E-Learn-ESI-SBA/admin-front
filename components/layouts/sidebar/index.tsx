@@ -4,10 +4,9 @@ import SideItem from "./sideItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Props = {
-  role: "teacher" | "student";
   sideBarItems: SideBarItem[];
 };
-export const SideBar: React.FC<Props> = ({ role, sideBarItems }) => {
+export const SideBar: React.FC<Props> = ({ sideBarItems }) => {
   return (
     <div className="top-0 left-0 relative w-80">
       <ScrollArea>
@@ -16,7 +15,7 @@ export const SideBar: React.FC<Props> = ({ role, sideBarItems }) => {
           <div className="mb-16 flex items-center justify-start gap-2 ">
             <div className="bg-[#0066FF] aspect-square w-16 rounded-2xl "></div>
             <div className="flex flex-col py-2  text-[#0066FF] ">
-              <p className="font-bold text-3xl">{role}</p>
+              <p className="font-bold text-3xl">Admin</p>
               <p className="font-medium">Dashboard</p>
             </div>
             {/* <Image src={"/icons/logo.svg"} width={150} height={150} alt="logo" /> */}

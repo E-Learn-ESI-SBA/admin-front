@@ -48,7 +48,7 @@ export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
     <>
       <DataTable<StudentWithUser>
         data={localStudents}
-        url="/s"
+        url="/dashboard/students"
         deleteHandler={(student) => deleteHandler(student)}
         headers={[
           {

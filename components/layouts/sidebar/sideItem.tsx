@@ -8,6 +8,7 @@ import {
   Menu,
   MessageSquareText,
   Settings,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,11 +18,12 @@ type iconType =
   | "menu"
   | "courses"
   | "profile"
+  | "students"
+  | "teachers"
   | "settings"
   | "logout"
   | "discussions"
   | "schedules";
-
 type TProps = {
   label: string;
   icon: iconType;
@@ -59,5 +61,9 @@ const SideIcon = (icon: iconType) => {
       return <LogOut />;
     case "schedules":
       return <CalendarCheck />;
+    case "students":
+      return <Users />
+    case "teachers":
+      return <Users />
   }
 };

@@ -42,7 +42,7 @@ export function TeachersTable({ rawTeachers }: { rawTeachers: Teacher[] }) {
     <>
       <DataTable<TeacherWithUser>
         data={localTeachers}
-        url="/t"
+        url="/dashboard/teachers"
         deleteHandler={(teacher) => deleteHandler(teacher)}
         headers={[
           {

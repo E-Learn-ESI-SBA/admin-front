@@ -6,7 +6,7 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ card }) => {
   return (
     <div>
-          <Image
+      <Image
         src={card.image}
         alt="course picture"
         width={0}
@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
           <p>Coéfficient {card.coef} </p>
           <p> {card.duration} </p>
         </div>
-      </div>  
+      </div>
     </div>
   )
 }

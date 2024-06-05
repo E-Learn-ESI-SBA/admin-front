@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const auth = await getAuth();
 
-  if (pathname.match("/auth") && !auth.isAuth) {
+  if (pathname.startsWith("/auth") && !auth.isAuth) {
     return NextResponse.next();
   }
 
@@ -15,12 +15,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
 
-  if(pathname.match("/auth") && !pathname.match("/auth/logout") && auth.isAuth){
+  if(pathname.startsWith("/auth") && !pathname.match("/auth/logout") && auth.isAuth){
     console.log("Redirecting to /");
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (pathname.match("/app") && auth.payload?.role != "admin") {
+  if (pathname.startsWith("/dashboard") && auth.payload?.role != "admin") {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
