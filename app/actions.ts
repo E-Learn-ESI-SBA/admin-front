@@ -49,7 +49,6 @@ export async function login(data: TAuthSchema) {
         await storeToken(res);
         return res;
     } catch (err) {
-        console.log(err);
         throw new Error("couldn't login");
     }
 }

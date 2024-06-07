@@ -78,7 +78,7 @@ export const Csv = () => {
       });
       setTimeout(() => {
         router.push(`/dashboard/students/`)
-      }, 3000)
+      }, 2000)
     } catch (error) {
       toast.error("Error when adding students", {
         style: {

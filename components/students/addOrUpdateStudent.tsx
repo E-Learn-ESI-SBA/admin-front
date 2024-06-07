@@ -123,7 +123,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
 
       // setTimeout(() => {
       //   router.push('/s');
-      // }, 3000);
+      // }, 2000);
     } catch (error) {
       toast.error("Error when updating Student", {
         style: {
@@ -149,7 +149,7 @@ export function AddOrUpdateStudent({ initDefaultValues, addOrUpdate, groups, yea
       });
       setTimeout(() => {
         router.push(`/dashboard/students/${response.user.id}`)
-      }, 3000)
+      }, 2000)
     } catch {
       toast.error("Error when adding student", {
         style: {

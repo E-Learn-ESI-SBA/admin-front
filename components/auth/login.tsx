@@ -60,10 +60,10 @@ export function SignInAccount() {
       });
       setTimeout(() => {
         router.replace("/");
-      }, 3000);
+      }, 2000);
     } catch (e: any) {
       const err = new IError(e)
-      toast.error(err.message, {
+      toast.error("Sorry, no user was found with these credentials.", {
         style: {
           backgroundColor: "red",
           color: "white",
