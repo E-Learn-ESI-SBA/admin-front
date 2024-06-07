@@ -3,6 +3,8 @@ import {getCourses} from "@/app/actions/materials/chapter.actions";
 import AlertError from "@/components/common/error";
 import NoDataComponent from "@/components/no-data";
 
+export const dynamic = "force-dynamic";
+
 export default async function ChaptersPage() {
     const {data,error}= await getCourses()
     if (error) {
