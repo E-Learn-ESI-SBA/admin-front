@@ -3,12 +3,14 @@ import { NextRequest } from "next/server";
 import { getAuth } from "@/app/actions";
 
 export async function middleware(request: NextRequest) {
-  console.log("Middleware called");
   const { pathname } = request.nextUrl;
   const auth = await getAuth();
 
   if (pathname.startsWith("/auth") && !auth.isAuth) {
-    console.log("match 1")
+    if(pathname.match("/auth/logout")){
+      return NextResponse.redirect(new URL("/auth", request.url));
+    }
+
     return NextResponse.next();
   }
 

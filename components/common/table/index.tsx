@@ -58,8 +58,8 @@ import { Search } from "lucide-react";
 import { compareItems, rankItem } from "@tanstack/match-sorter-utils";
 import { CollTableDropDown } from "@/components/common/table/coll-dropdown";
 import { Filter } from "@/components/common/table/filter";
-import {AlertModal} from "@/components/common/dialog/alert";
-import {toast} from "sonner";
+import { AlertModal } from "@/components/common/dialog/alert";
+import { toast } from "sonner";
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
@@ -92,7 +92,7 @@ export type Props<T extends { id: string }> = {
   url?: string;
   customColumns?: (() => ColumnDef<T>)[];
   editHandler?: (row: T) => void;
-  deleteHandler?: (row: T) => void | Promise<void> ;
+  deleteHandler?: (row: T) => void | Promise<void>;
   customOperations?: {
     title: string;
     handler: (row: T) => void;
@@ -109,7 +109,7 @@ export function DataTable<T extends { id: string }>({
   editHandler = undefined,
   deleteHandler = undefined,
   customOperations,
-  url = "/dashboard",
+  url,
   words_separator = "_",
   fuzzyElements,
 }: Props<T>) {
@@ -177,8 +177,8 @@ export function DataTable<T extends { id: string }>({
   const [rowSelection, setRowSelection] = useState({});
   const [selectedCols, setSelectedCols] = useState<keyof T>(defaultFilter);
   const [wantDelete, setWantDelete] = useState(false);
-    const [deleteLoading, setDeleteLoading] = useState(false);
-    const [selectedRowState, setSelectedRowState] = useState<T | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [selectedRowState, setSelectedRowState] = useState<T | null>(null);
   const table = useReactTable({
     data,
     //
@@ -237,7 +237,6 @@ export function DataTable<T extends { id: string }>({
                   onClick={() => {
                     setWantDelete(true);
                     setSelectedRowState(selectedRow);
-
                   }}
                 >
                   <span>Delete</span>
@@ -272,33 +271,32 @@ export function DataTable<T extends { id: string }>({
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   });
   const DeleteFn = async (row: T) => {
-    if(deleteHandler) {
-
-    try {
-      setDeleteLoading(true);
-      await deleteHandler(row);
-      setDeleteLoading(false);
-      setWantDelete(false);
-      toast.success("Item deleted successfully.", {
-        style: {
-              backgroundColor: "green",
-              color: "white",
-            },
-      });
-    } catch (e) {
-      console.log(e)
-      setDeleteLoading(false);
-      setWantDelete(false);
-      toast.error("An error occurred while deleting the item.", {
-        style: {
-              backgroundColor: "red",
-              color: "white",
-            },
-      });
+    if (deleteHandler) {
+      try {
+        setDeleteLoading(true);
+        await deleteHandler(row);
+        setDeleteLoading(false);
+        setWantDelete(false);
+        toast.success("Item deleted successfully.", {
+          style: {
+            backgroundColor: "green",
+            color: "white",
+          },
+        });
+      } catch (e) {
+        setDeleteLoading(false);
+        setWantDelete(false);
+        toast.error("An error occurred while deleting the item.",{
+          style: {
+            backgroundColor: "red",
+            color: "white",
+          },
+        
+        });
+      }
     }
-    }
-    return
-  }
+    return;
+  };
 
   return (
     <div className="space-y-4 overflow-hidden bg-white p-4 rounded-md min-w-[580px]">
@@ -369,9 +367,9 @@ export function DataTable<T extends { id: string }>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows?.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={row?.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -398,7 +396,8 @@ export function DataTable<T extends { id: string }>({
         </Table>
       </div>
       <TablePagination<T> table={table} />
-      {deleteHandler && selectedRowState && <AlertModal
+      {deleteHandler && selectedRowState && (
+        <AlertModal
           isLoading={deleteLoading}
           title="Are you absolutely sure?"
           modalHandler={() => DeleteFn(selectedRowState)}
@@ -406,7 +405,8 @@ export function DataTable<T extends { id: string }>({
           open={wantDelete}
           onOpenChange={setWantDelete}
           withTrigger
-      />}
+        />
+      )}
     </div>
   );
 }
@@ -417,16 +417,3 @@ type Headers<T> = {
   title: string;
   accessorKey: keyof T;
 }[];
-
-/* function buildMapFromHeaders<T>(headers: Headers<T>,defaultFilter:keyof T): Map<keyof T, boolean> {
-  const generatedObj: { [key in keyof T]: boolean } = {} as any;
-
-  headers.forEach(header => {
-    generatedObj[header.accessorKey] = false;
-  });
-
-  const map = new Map<keyof T, boolean>(Object.entries(generatedObj) as [keyof T, boolean][]);
-  map.set(defaultFilter, true);
-  return map;
-}
-*/

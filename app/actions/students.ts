@@ -1,13 +1,22 @@
 'use server'
 import { Student } from "@/types/students";
-import { base_url } from '@/config/constants'; 
+import { base_url, STAFF_BASE_URL } from '@/config/constants';
 import axiosClient from "@/utils/axiosInstance";
- 
+import { cookies } from "next/headers";
+
 export async function getStudents(): Promise<Student[]> {
     'use server'
     try {
-        const response = await axiosClient.get('students');
-        return response.data;
+        const res = await fetch(`${STAFF_BASE_URL}/students`, {
+            headers: {
+                Authorization: `Bearer ${cookies().get('accessToken')?.value}`
+            }
+        });
+        const response = await res.json();
+        if (!res.ok) {
+            throw new Error(response?.detail);
+        }
+        return response;
     } catch (err) {
         throw new Error("Failed in fetching students");
     }
@@ -16,31 +25,61 @@ export async function getStudents(): Promise<Student[]> {
 export async function getStudentById(id: string): Promise<Student> {
     'use server'
     try {
-        const response = await axiosClient.get(`students/${id}`);
-        return response.data;
-    } catch (err) {
-        throw new Error("Failed in fetching student with id");
+        const res = await fetch(`${STAFF_BASE_URL}/students/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${cookies().get('accessToken')?.value}`
+            }}
+        );
+        const response = await res.json();
+        if (!res.ok) {
+            throw new Error(response?.detail);
+        }
+        return response;
+    } catch (err: any) {
+        throw new Error(err?.message);
     }
 }
 
 export async function addStudent(data: Student) {
     'use server'
     try {
-        const response = await axiosClient.post('students/', data);
-        return response.data;
+        const res = await fetch(`${STAFF_BASE_URL}/students/`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${cookies().get('accessToken')?.value}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const response = await res.json();
+        if (!res.ok) {
+            throw new Error(response?.detail);
+        }
+        return response;
     } catch (err) {
-        throw new Error('Failed to create new student');
+        throw new Error("Failed when adding student");
     }
 }
 
 export async function addStudents(data: Student[]) {
     'use server'
     try {
-        const response = await axiosClient.post('students/many/', data);
-        return response.data;
-    } catch (err: any) {
-        console.log(err);
-        throw new Error('Failed to create new students');
+        const res = await fetch(`${STAFF_BASE_URL}/students/`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${cookies().get('accessToken')?.value}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const response = await res.json();
+        if (!res.ok) {
+            throw new Error(response?.detail);
+        }
+        return response;
+    } catch (err) {
+        throw new Error("Failed when adding students");
     }
 }
 
@@ -48,19 +87,40 @@ export async function addStudents(data: Student[]) {
 export async function deleteStudent(id: string) {
     'use server'
     try {
-        const response = await axiosClient.delete(`students/${id}/`);
-        return response.data;
+        const res = await fetch(`${STAFF_BASE_URL}/students/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${cookies().get('accessToken')?.value}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if(res.status !== 204) {
+            throw new Error("Fadddddiled when Delting student");
+        }
+        return;
     } catch (err: any) {
-        throw new Error(err.message);
+        console.log(err?.message)
+        throw new Error("Failed when Delting student");
     }
 }
 
 export async function updateStudent(id: string, data: Partial<Student>) {
     'use server'
     try {
-        const response = await axiosClient.patch(`students/${id}/`, data);
-        return response.data;
-    } catch (err: any) {
-        throw new Error(err.message);
+        const res = await fetch(`${STAFF_BASE_URL}/students/${id}/`, {
+            method: 'PATCH',
+            cache: 'no-store',
+            headers: {
+                Authorization: `Bearer ${cookies().get('accessToken')?.value}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            throw new Error("Something went wrong");
+        }
+        return;
+    } catch (err) {
+        throw new Error("Failed in fetching students");
     }
 }

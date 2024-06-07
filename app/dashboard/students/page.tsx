@@ -2,16 +2,17 @@ import { StudentsTable } from "@/components/students/table";
 import { Student } from "@/types/students";
 import Link from "next/link";
 import { getStudents } from "@/app/actions/students";
+import AlertError from "@/components/common/error";
 
 export default async function StudentDashboard() {
   let students: Student[] = [];
-  let errorMessage: string | null = null;
+  let errorMessage: any | null = null;
 
   try {
     students = await getStudents();
   } catch (err) {
     console.error("Failed to fetch students data:", err);
-    errorMessage = "Failed to load students data. Please try again later.";
+    errorMessage = err;
   }
 
   return (
@@ -20,9 +21,7 @@ export default async function StudentDashboard() {
         + Add Student
       </Link>
       {errorMessage ? (
-        <div className="text-red-500">
-          {errorMessage}
-        </div>
+        <AlertError error={errorMessage} />
       ) : (
         <StudentsTable rawStudents={students} />
       )}

@@ -2,6 +2,7 @@ import React from "react";
 import { SideBarItem } from "@/types";
 import SideItem from "./sideItem";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Image from "next/image";
 
 type Props = {
   sideBarItems: SideBarItem[];
@@ -13,7 +14,9 @@ export const SideBar: React.FC<Props> = ({ sideBarItems }) => {
 
         <div className="w-80  z-50 left-0 fixed bg-white  h-screen top-0  p-4">
           <div className="mb-16 flex items-center justify-start gap-2 ">
-            <div className="bg-[#0066FF] aspect-square w-16 rounded-2xl "></div>
+            <div className="bg-[#0066FF] aspect-square w-16 rounded-2xl ">
+              <Image src={"/assets/logo.png"} width={100} height={100} alt="logo" />
+            </div>
             <div className="flex flex-col py-2  text-[#0066FF] ">
               <p className="font-bold text-3xl">Admin</p>
               <p className="font-medium">Dashboard</p>
