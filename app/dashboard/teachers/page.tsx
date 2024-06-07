@@ -2,16 +2,17 @@ import { TeachersTable } from "@/components/teachers/table";
 import { Teacher } from "@/types/teachers";
 import Link from "next/link";
 import { getTeachers } from "@/app/actions/teachers";
+import AlertError from "@/components/common/error";
 
 export default async function TeacherDashboard() {
   let teachers: Teacher[] = [];
-  let errorMessage: string | null = null;
+  let errorMessage: any | null = null;
 
   try {
     teachers = await getTeachers();
   } catch (err) {
     console.error("Failed to fetch teachers data:", err);
-    errorMessage = "Failed to load teachers data. Please try again later.";
+    errorMessage = err;
   }
 
   return (
@@ -20,9 +21,7 @@ export default async function TeacherDashboard() {
         + Add Teacher
       </Link>
       {errorMessage ? (
-        <div className="text-red-500">
-          {errorMessage}
-        </div>
+        <AlertError error={errorMessage} />
       ) : (
         <TeachersTable rawTeachers={teachers} />
       )}

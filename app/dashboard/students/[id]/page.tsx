@@ -1,14 +1,15 @@
 import { getStudentById } from '@/app/actions/students';
 import { getGroups, getPromos, getYears } from '@/app/actions/utils';
+import AlertError from '@/components/common/error';
 import { AddOrUpdateStudent } from '@/components/students/addOrUpdateStudent'
 import { Option } from '@/components/ui/multi-select';
 import { User } from '@/types';
 import { StudentWithUser } from '@/types/students';
 import { groupToOptions } from '@/utils/utils';
 
-export default async function Page ({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { id: string } }) {
   let student: StudentWithUser | null = null;
-  let errorMessage: string | null = null;
+  let errorMessage: any | null = null;
   let promos: string[] = [];
   let groups: string[] = [];
   let years: string[] = [];
@@ -24,13 +25,13 @@ export default async function Page ({ params }: { params: { id: string } }) {
     student['password'] = "redactedPassword";
   } catch (err) {
     console.error("Failed to fetch student data:", err);
-    errorMessage = "Failed to load student data. Please try again later.";
+    errorMessage = err;
   }
 
   if (errorMessage) {
     return (
       <div>
-        <p>{errorMessage}</p>
+        <AlertError error={errorMessage} />
       </div>
     );
   }
@@ -45,7 +46,7 @@ export default async function Page ({ params }: { params: { id: string } }) {
 
   return (
     <div>
-        <AddOrUpdateStudent addOrUpdate='UPDATE' initDefaultValues={student} groups={groupOptions} promos={promos} years={years}/>
+      <AddOrUpdateStudent addOrUpdate='UPDATE' initDefaultValues={student} groups={groupOptions} promos={promos} years={years} />
     </div>
   );
 }

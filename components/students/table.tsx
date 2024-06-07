@@ -87,10 +87,7 @@ export function StudentsTable({ rawStudents }: { rawStudents: Student[] }) {
             accessorKey: "registration_number",
             title: "Registration Number",
           },
-          {
-            accessorKey: "promo_group",
-            title: "Group Promo",
-          },
+          
         ]}
         // customColumns={[CustomColumns]}
         defaultFilter="first_name"
