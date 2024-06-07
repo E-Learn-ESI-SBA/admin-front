@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
   if(pathname.startsWith("/auth") && !pathname.match("/auth/logout") && auth.isAuth){
     console.log("match 4")
     console.log("Redirecting to /");
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/dashbaord", request.url));
   }
 
   if (pathname.startsWith("/dashboard") && auth.payload?.role != "admin") {
