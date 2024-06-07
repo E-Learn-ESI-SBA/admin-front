@@ -4,7 +4,10 @@ import NoDataComponent from "@/components/no-data";
 import {ModulesTable} from "@/components/module.table";
 
 
-export    default async function ModulesPage() {
+export const dynamic = "force-dynamic";
+
+
+export  default async function ModulesPage() {
 
     const {data , error } = await  getModules()
     if (error) {
