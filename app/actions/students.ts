@@ -65,7 +65,7 @@ export async function addStudent(data: Student) {
 export async function addStudents(data: Student[]) {
     'use server'
     try {
-        const res = await fetch(`${STAFF_BASE_URL}/students/`, {
+        const res = await fetch(`${STAFF_BASE_URL}/students/many/`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${cookies().get('accessToken')?.value}`,
