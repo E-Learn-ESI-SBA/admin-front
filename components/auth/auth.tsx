@@ -49,7 +49,7 @@ export default function AuthUI() {
             </div>
           </div>
           <p className="px-8 text-xs text-muted-foreground">
-            By submitting, you agree to our terms of service and privacy.
+          If you encounter problems logging in, please contact us.
           </p>
         </CardFooter>
       </Card>

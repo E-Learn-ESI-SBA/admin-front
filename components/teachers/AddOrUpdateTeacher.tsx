@@ -119,7 +119,7 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate }: Props) {
 
             // setTimeout(() => {
             //   router.push('/s');
-            // }, 3000);
+            // }, 2000);
         } catch (error) {
             toast.error("Error when updating Teacher", {
                 style: {
@@ -144,7 +144,7 @@ export function AddOrUpdateTeacher({ initDefaultValues, addOrUpdate }: Props) {
             });
             setTimeout(() => {
                 router.push(`/dashboard/teachers/${response.user.id}`)
-            }, 3000)
+            }, 2000)
         } catch {
             toast.error("Error when adding Teacher", {
                 style: {

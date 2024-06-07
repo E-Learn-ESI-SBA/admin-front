@@ -44,7 +44,7 @@ export function ResetPassword({
     await resetPassword(values.email, setSelectedAuth);
     setTimeout(() => {
       setIsLoading("DEFAULT");
-    }, 3000);
+    }, 2000);
   }
 
   const form = useForm<TResetSchema>({
