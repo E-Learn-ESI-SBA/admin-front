@@ -76,7 +76,6 @@ export async function getAuth(): Promise<{ isAuth: boolean; payload: TPayload | 
   
       const jwtKey = process.env.JWT_SECRET ?? "aTZ6czFOcTFHekRrZEJHUTB5cFlZZ0M1aXQyR3FiNlltaWx5aDJFUWpIQT0K";
       const claim = await jwtVerify<TPayload>(token, new TextEncoder().encode(jwtKey));
-      console.log(claim.payload)
       const strPayload = JSON.stringify(claim.payload);
   
   
