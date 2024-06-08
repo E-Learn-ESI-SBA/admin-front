@@ -14,6 +14,12 @@ const nextConfig = {
                 port: "",
                 pathname: "/v0/b/madaurus-71e46.appspot.com/o/**",
             },
+            {
+                protocol: "https",
+                hostname: "avatars.githubusercontent.com",
+                port: "",
+                pathname: "/*",
+            },
         ],
     },
 };
