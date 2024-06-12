@@ -11,7 +11,7 @@ export default async function TeacherDashboard() {
   try {
     teachers = await getTeachers();
   } catch (err) {
-    console.error("Failed to fetch teachers data:", err);
+    // console.error("Failed to fetch teachers data:", err);
     errorMessage = err;
   }
 

@@ -11,7 +11,7 @@ export default async function StudentDashboard() {
   try {
     students = await getStudents();
   } catch (err) {
-    console.error("Failed to fetch students data:", err);
+    // console.error("Failed to fetch students data:", err);
     errorMessage = err;
   }
 
