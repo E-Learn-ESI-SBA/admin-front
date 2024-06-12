@@ -39,7 +39,7 @@ export const getCourses = async (): Promise<IResponse<Required<ChapterWithModule
             status: response.status,
         };
     } catch (e) {
-        console.log("error", e);
+        console.log("Fendi", e);
         const err = new IError(e);
         return {
             status: 500,

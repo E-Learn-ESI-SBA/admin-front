@@ -81,7 +81,7 @@ export async function getAuth(): Promise<{ isAuth: boolean; payload: TPayload | 
   
       return { isAuth: true, payload: claim.payload };
     } catch (e) {
-      console.log("Error:", e);
+      console.log("Fendi:", e);
       return { isAuth: false, payload: null };
     }
   };
