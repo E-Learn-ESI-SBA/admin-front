@@ -13,7 +13,7 @@ export default function Page() {
     useEffect(() => {
         const delay = 2000;
         const timer = setTimeout(async () => {
-            if (isAuth) {
+            if (!isAuth) {
                 router.replace('/dashboard');
             }else{
               router.replace("/auth")
