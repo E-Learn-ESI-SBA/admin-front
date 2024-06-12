@@ -17,7 +17,7 @@ import MultipleSelector, {Option} from "@/components/ui/multi-select";
 import {Module} from "@/types/modules";
 
 import {firebaseService} from "@/lib/firebase";
-
+export const dynamic = "force-dynamic";
 type Props = {
     setStep:  Dispatch<SetStateAction<FormState>>
     currentImage: File | null
@@ -37,7 +37,9 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
     const [loading,setLoading] = useState<boolean>(false)
     const submitHandler = async (value:TSecondSchema) => {
         try {
-            const moduleOverview = JSON.parse(sessionStorage.getItem("module-1") ?? '{}') as TFirstZodSchema
+                     if (typeof window !== "undefined") {
+          const moduleOverview = JSON.parse(sessionStorage.getItem("module-1") ?? '{}') as TFirstZodSchema
+      
             const data:Module = {
                 ...moduleOverview,
                 ...value,
@@ -59,6 +61,7 @@ export const SecondStep = ({setStep,setCurrentImage,currentImage}:Props) =>   {
             })
             console.log(data)
             setStep(FormState.CONFIRM)
+              }
         }catch (e) {
             console.log(e)
             toast.error("An error occurred",{

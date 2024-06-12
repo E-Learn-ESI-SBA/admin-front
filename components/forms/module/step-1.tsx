@@ -8,6 +8,8 @@ import {toast} from "sonner";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
     setStep:  Dispatch<SetStateAction<FormState>>
 }
@@ -21,7 +23,10 @@ export const FirstStep = ({setStep}:Props) => {
             year: ""
         }
         try {
-            defaultValue = JSON.parse(sessionStorage.getItem("module-1") ?? "{}")  as TFirstZodSchema
+              if (typeof window !== "undefined") {
+             defaultValue = JSON.parse(sessionStorage.getItem("module-1") ?? "{}")  as TFirstZodSchema
+        }
+          
 
         }catch (e) {
             console.log(e)
